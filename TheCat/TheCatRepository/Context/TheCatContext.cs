@@ -10,7 +10,7 @@ namespace TheCatRepository.Context
         }
 
         public virtual DbSet<Breeds> Breeds { get; set; }
-        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<ImageUrl> ImageUrls { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

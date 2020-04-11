@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using TheCatDomain.Entities;
 using TheCatDomain.Interfaces.Repositories;
@@ -15,7 +12,9 @@ namespace TheCatTest.Repositories
     public class RepositoriesTest
     {
         readonly Breeds breedsBase;
+        readonly Category categoryBase;
         readonly IBreedsRepository breedsRepository;
+        readonly ICategoryRepository categoryRepository;
 
         public RepositoriesTest()
         {
@@ -31,8 +30,13 @@ namespace TheCatTest.Repositories
                 Description = "The Abyssinian is easy to care for, and a joy to have in your home. They’re affectionate cats and love both people and other animals."
             };
 
+            categoryBase = new Category(1, "hats");
+
             breedsRepository = new BreedsRepository(contextDB);
+            categoryRepository = new CategoryRepository(contextDB);
         }
+
+        #region Breeds Test
 
         [Fact]
         public async void BreedsGetAllTest()
@@ -64,5 +68,39 @@ namespace TheCatTest.Repositories
                 await breedsRepository.UpdateBreeds(breedsInDB);
             }
         }
+
+        #endregion
+
+        #region Category Test
+
+        [Fact]
+        public async void CategoryGetAllTest()
+        {
+            await AddCategory();
+            var result = await categoryRepository.GetAllCategory();
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async void CategoryGetCategoryTest()
+        {
+            await AddCategory();
+            var result = await categoryRepository.GetCategory(categoryBase.CategoryId);
+            Assert.NotNull(result);
+        }
+
+        async Task AddCategory()
+        {
+            var categoryInDB = await categoryRepository.GetCategory(categoryBase.CategoryId);
+            if (categoryInDB == null)
+                await categoryRepository.AddCategory(categoryBase);
+            else
+            {
+                categoryInDB.Name = categoryBase.Name;
+                await categoryRepository.UpdateCategory(categoryInDB);
+            }
+        }
+
+        #endregion
     }
 }
