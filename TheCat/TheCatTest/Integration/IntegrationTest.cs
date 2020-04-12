@@ -7,7 +7,7 @@ using Xunit;
 namespace TheCatTest.Integration
 {
     /// <summary>
-    /// Classe resonsável por realizar os testes implementados na classe de integração com a API TheCatAPI
+    /// Classe resonsável por realizar os testes dos métodos implementados no projeto de integração com a API TheCatAPI
     /// </summary>
     public class IntegrationTest
     {

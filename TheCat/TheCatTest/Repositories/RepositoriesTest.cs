@@ -10,7 +10,7 @@ using Xunit;
 namespace TheCatTest.Repositories
 {
     /// <summary>
-    /// Classe resonsável por realizar os testes implementados nas classes de Repositórios
+    /// Classe resonsável por realizar os testes dos métodos implementados no projeto Repositórios
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class RepositoriesTest : Attribute

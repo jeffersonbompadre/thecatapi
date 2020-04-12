@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using TheCatDomain.Entities;
 using TheCatDomain.Interfaces.Application;
@@ -23,24 +22,16 @@ namespace TheCatApplication.Commands
         readonly AppSettings appSettings;
 
         /// <summary>
-        /// Construtor recebe AppSettings para ter os filtros referente ao nome Category
-        /// a serem filtrados para associar ImageUrl
+        /// Construtor recebe como parâmetro a instância das classes de AppSettings, Integração e Repositórios
         /// </summary>
         /// <param name="appSettings"></param>
-        public CommandCapture(AppSettings appSettings)
-        {
-            this.appSettings = appSettings;
-        }
-
-        /// <summary>
-        /// Construtor recebe como parâmetro a instância das classes de Integração e Repositórios
-        /// </summary>
         /// <param name="theCatAPI"></param>
         /// <param name="breedsRepository"></param>
         /// <param name="categoryRepository"></param>
         /// <param name="imageUrlRepository"></param>
-        public CommandCapture(ITheCatAPI theCatAPI, IBreedsRepository breedsRepository, ICategoryRepository categoryRepository, IImageUrlRepository imageUrlRepository)
+        public CommandCapture(AppSettings appSettings, ITheCatAPI theCatAPI, IBreedsRepository breedsRepository, ICategoryRepository categoryRepository, IImageUrlRepository imageUrlRepository)
         {
+            this.appSettings = appSettings;
             this.theCatAPI = theCatAPI;
             this.breedsRepository = breedsRepository;
             this.categoryRepository = categoryRepository;
