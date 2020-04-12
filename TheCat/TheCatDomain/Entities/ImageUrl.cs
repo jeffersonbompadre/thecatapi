@@ -31,6 +31,8 @@
         public int Width { get; private set; }
         public int Height { get; private set; }
 
+        // Estas propriedades, se atribuídas, irão gerar a gravação
+        // na tabela de associção entre ImageUrl, Breeds e Category
         public Breeds Breeds { get; private set; }
         public Category Category { get; private set; }
 

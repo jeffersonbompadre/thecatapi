@@ -68,7 +68,7 @@ namespace TheCatAPIIntegration.Service
         /// <param name="categoryId"></param>
         /// <param name="limitImages"></param>
         /// <returns></returns>
-        public async Task<ICollection<ImageSearchResponse>> GetImagesByCategory(string categoryId, int limitImages = 4)
+        public async Task<ICollection<ImageSearchResponse>> GetImagesByCategory(int categoryId, int limitImages = 4)
         {
             var jsonResult = await GetHttpResponse($"{appSettings.TheCatSettings.ImageMethod}?category_ids={categoryId}&limit={limitImages}&include_categories=false");
             if (string.IsNullOrEmpty(jsonResult))

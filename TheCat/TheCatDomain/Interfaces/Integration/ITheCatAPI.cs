@@ -12,7 +12,7 @@ namespace TheCatDomain.Interfaces.Integration
     {
         Task<ICollection<BreedsSearchResponse>> GetBreeds();
         Task<ICollection<CategorySearchResponse>> GetCategories();
-        Task<ICollection<ImageSearchResponse>> GetImagesByCategory(string categoryId, int limitImages = 4);
+        Task<ICollection<ImageSearchResponse>> GetImagesByCategory(int categoryId, int limitImages = 4);
         Task<ICollection<ImageSearchResponse>> GetImagesByBreeds(string breedsId, int limitImages = 3);
     }
 }

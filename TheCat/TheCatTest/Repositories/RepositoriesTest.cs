@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using TheCatDomain.Entities;
 using TheCatDomain.Interfaces.Repositories;
@@ -31,9 +30,7 @@ namespace TheCatTest.Repositories
         public RepositoriesTest()
         {
             var appSettings = AppConfiguration.GetAppSettings();
-            var optionsBuilder = new DbContextOptionsBuilder<TheCatContext>();
-            optionsBuilder.UseSqlServer(appSettings.ConnectionString, providerOptions => providerOptions.CommandTimeout(60));
-            var contextDB = new TheCatContext(optionsBuilder.Options);
+            var contextDB = new TheCatDBContext(appSettings);
 
             breedsBase = new Breeds("abys", "Abyssinian");
             breedsBase.SetOrigin("Egypt");
@@ -235,6 +232,8 @@ namespace TheCatTest.Repositories
                 imageUrlInDB.SetUrl(imageUrlBase.Url);
                 imageUrlInDB.SetWidth(imageUrlBase.Width);
                 imageUrlInDB.SetHeight(imageUrlBase.Height);
+                imageUrlInDB.SetBreeds(breedsBase);
+                imageUrlInDB.SetCategory(categoryBase);
                 await imageUrlRepository.UpdateImageUrl(imageUrlInDB);
             }
         }

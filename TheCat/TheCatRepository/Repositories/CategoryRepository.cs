@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TheCatDomain.Entities;
 using TheCatDomain.Interfaces.Repositories;
@@ -13,14 +15,19 @@ namespace TheCatRepository.Repositories
     /// </summary>
     public class CategoryRepository : ICategoryRepository
     {
-        readonly TheCatContext theCatContext;
+        // Comandos base para serem concatenados
+        const string queryBase =
+            @"SELECT CategoryId, Name
+              FROM category";
+
+        readonly TheCatDBContext theCatContext;
 
         /// <summary>
         /// Construtor da classe: Espera um DBContext responsável por acessar a base e que implementa os
         /// comandos de banco de dados
         /// </summary>
         /// <param name="theCatContext"></param>
-        public CategoryRepository(TheCatContext theCatContext)
+        public CategoryRepository(TheCatDBContext theCatContext)
         {
             this.theCatContext = theCatContext;
         }
@@ -31,7 +38,11 @@ namespace TheCatRepository.Repositories
         /// <returns></returns>
         public async Task<ICollection<Category>> GetAllCategory()
         {
-            return await theCatContext.Category.AsNoTracking().ToListAsync();
+            using (var conn = theCatContext.GetConnection)
+            {
+                var result = await conn.QueryAsync<Category>(queryBase);
+                return result.ToList();
+            }
         }
 
         /// <summary>
@@ -41,7 +52,11 @@ namespace TheCatRepository.Repositories
         /// <returns></returns>
         public async Task<Category> GetCategory(int id)
         {
-            return await theCatContext.Category.FirstOrDefaultAsync(x => x.CategoryId == id);
+            using (var conn = theCatContext.GetConnection)
+            {
+                var result = await conn.QueryAsync<Category>($"{queryBase} WHERE CategoryId = {id}");
+                return result.FirstOrDefault();
+            }
         }
 
         /// <summary>
@@ -55,8 +70,15 @@ namespace TheCatRepository.Repositories
                 return;
             else
             {
-                theCatContext.Add(category);
-                await theCatContext.SaveChangesAsync();
+                var sqlCommand =
+                    @"INSERT INTO category 
+                        (CategoryId, Name) 
+                      VALUES
+                        (@CategoryId, @Name)";
+                using (var conn = theCatContext.GetConnection)
+                {
+                    await conn.ExecuteAsync(sqlCommand, category);
+                }
             }
         }
 
@@ -71,8 +93,14 @@ namespace TheCatRepository.Repositories
                 return;
             else
             {
-                theCatContext.Entry(category).State = EntityState.Modified;
-                await theCatContext.SaveChangesAsync();
+                var sqlCommand =
+                    @"UPDATE category SET 
+                        Name = @Name
+                    WHERE CategoryId = @CategoryId";
+                using (var conn = theCatContext.GetConnection)
+                {
+                    await conn.ExecuteAsync(sqlCommand, category);
+                }
             }
         }
     }

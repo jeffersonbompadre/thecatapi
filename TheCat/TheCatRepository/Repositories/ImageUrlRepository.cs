@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TheCatDomain.Entities;
@@ -13,14 +14,19 @@ namespace TheCatRepository.Repositories
     /// </summary>
     public class ImageUrlRepository : IImageUrlRepository
     {
-        readonly TheCatContext theCatContext;
+        // Comandos base para serem concatenados
+        const string queryBase = 
+            @"SELECT ImageUrlId, Url, Width, Height 
+              FROM imageurl";
+
+        readonly TheCatDBContext theCatContext;
 
         /// <summary>
         /// Construtor da classe: Espera um DBContext responsável por acessar a base e que implementa os
         /// comandos de banco de dados
         /// </summary>
         /// <param name="theCatContext"></param>
-        public ImageUrlRepository(TheCatContext theCatContext)
+        public ImageUrlRepository(TheCatDBContext theCatContext)
         {
             this.theCatContext = theCatContext;
         }
@@ -31,7 +37,11 @@ namespace TheCatRepository.Repositories
         /// <returns></returns>
         public async Task<ICollection<ImageUrl>> GetAllImageUrl()
         {
-            return await theCatContext.ImageUrl.AsNoTracking().ToListAsync();
+            using (var conn = theCatContext.GetConnection)
+            {
+                var result = await conn.QueryAsync<ImageUrl>(queryBase);
+                return result.ToList();
+            }
         }
 
         /// <summary>
@@ -41,7 +51,11 @@ namespace TheCatRepository.Repositories
         /// <returns></returns>
         public async Task<ImageUrl> GetImageUrl(string id)
         {
-            return await theCatContext.ImageUrl.FirstOrDefaultAsync(x => x.ImageUrlId == id);
+            using (var conn = theCatContext.GetConnection)
+            {
+                var result = await conn.QueryAsync<ImageUrl>($"{queryBase} WHERE ImageUrlId = '{id}'");
+                return result.FirstOrDefault();
+            }
         }
 
         /// <summary>
@@ -55,9 +69,16 @@ namespace TheCatRepository.Repositories
                 return;
             else
             {
-                IgnoreForeignRelation(imageUrl);
-                theCatContext.Add(imageUrl);
-                await theCatContext.SaveChangesAsync();
+                var sqlCommand = 
+                    @"INSERT INTO imageurl 
+                        (ImageUrlId, Url, Width, Height) 
+                      VALUES
+                        (@ImageUrlId, @Url, @Width, @Height)";
+                using (var conn = theCatContext.GetConnection)
+                {
+                    await conn.ExecuteAsync(sqlCommand, imageUrl);
+                }
+                await SaveImageUrlWithAssociation(imageUrl);
             }
         }
 
@@ -74,23 +95,84 @@ namespace TheCatRepository.Repositories
                 return;
             else
             {
-                IgnoreForeignRelation(imageUrl);
-                theCatContext.Entry(imageUrl).State = EntityState.Modified;
-                await theCatContext.SaveChangesAsync();
+                var sqlCommand = 
+                    @"UPDATE imageurl SET 
+                        Url = @Url
+                        , Width = @Width
+                        , Height = @Height
+                    WHERE ImageUrlId = @ImageUrlId";
+                using (var conn = theCatContext.GetConnection)
+                {
+                    await conn.ExecuteAsync(sqlCommand, imageUrl);
+                }
+                await SaveImageUrlWithAssociation(imageUrl);
             }
         }
 
         /// <summary>
-        /// Altera o status dos objetos Breeds e Category no traching changes do ORM para UnChanged, para que estes
-        /// não sofram alteração na base de dados, sendo que é para apenas gravar na tabela ImageUrl dentro deste repositório
+        /// Verifica se a ImageUrl está associada com Breeds e/ou Category e
+        /// caso sim, associa nas suas respectivas tabelas
         /// </summary>
         /// <param name="imageUrl"></param>
-        void IgnoreForeignRelation(ImageUrl imageUrl)
+        /// <returns></returns>
+        async Task SaveImageUrlWithAssociation(ImageUrl imageUrl)
         {
             if (imageUrl.Breeds != null)
-                theCatContext.Entry(imageUrl.Breeds).State = EntityState.Unchanged;
+                await AssociateImageUrlToBreeds(imageUrl);
             if (imageUrl.Category != null)
-                theCatContext.Entry(imageUrl.Category).State = EntityState.Unchanged;
+                await AssociateImageUrlToCategory(imageUrl);
+        }
+
+        /// <summary>
+        /// Associa ImageUrl com Breeds. Antes verifica se já existe associação, caso não,
+        /// insere na tabela de associação
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        /// <returns></returns>
+        async Task AssociateImageUrlToBreeds(ImageUrl imageUrl)
+        {
+            using (var conn = theCatContext.GetConnection)
+            {
+                var result = await conn.QueryFirstAsync<int>(
+                    @$"SELECT count(*) as nrec
+                       FROM ImageUrlBreeds
+                       WHERE ImageUrlId = '{imageUrl.ImageUrlId}'
+                         AND BreedsId = '{imageUrl.Breeds.BreedsId}'"
+                );
+                if (result == 0)
+                {
+                    await conn.ExecuteAsync(
+                        $@"INSERT INTO ImageUrlBreeds (ImageUrlId, BreedsId)
+                           VALUES ('{imageUrl.ImageUrlId}', '{imageUrl.Breeds.BreedsId}')"
+                    );
+                }
+            }
+        }
+
+        /// <summary>
+        /// Associa ImageUrl com Category. Antes verifica se já existe associação, caso não,
+        /// insere na tabela de associação
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        /// <returns></returns>
+        async Task AssociateImageUrlToCategory(ImageUrl imageUrl)
+        {
+            using (var conn = theCatContext.GetConnection)
+            {
+                var result = await conn.QueryFirstAsync<int>(
+                    @$"SELECT count(*) as nrec
+                       FROM ImageUrlCategory
+                       WHERE ImageUrlId = '{imageUrl.ImageUrlId}'
+                         AND CategoryId = {imageUrl.Category.CategoryId}"
+                );
+                if (result == 0)
+                {
+                    await conn.ExecuteAsync(
+                        $@"INSERT INTO ImageUrlCategory (ImageUrlId, CategoryId)
+                           VALUES ('{imageUrl.ImageUrlId}', {imageUrl.Category.CategoryId})"
+                    );
+                }
+            }
         }
     }
 }

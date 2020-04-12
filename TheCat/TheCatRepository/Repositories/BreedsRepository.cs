@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,18 +15,22 @@ namespace TheCatRepository.Repositories
     /// </summary>
     public class BreedsRepository : IBreedsRepository
     {
-        readonly TheCatContext theCatContext;
+        // Comandos base para serem concatenados
+        const string queryBase =
+            @"SELECT BreedsId, Name, Origin, Temperament, Description
+              FROM breeds";
+
+        readonly TheCatDBContext theCatContext;
 
         /// <summary>
         /// Construtor da classe: Espera um DBContext responsável por acessar a base e que implementa os
         /// comandos de banco de dados
         /// </summary>
         /// <param name="theCatContext"></param>
-        public BreedsRepository(TheCatContext theCatContext)
+        public BreedsRepository(TheCatDBContext theCatContext)
         {
             this.theCatContext = theCatContext;
         }
-
 
         /// <summary>
         /// Método traz todas as as informações da tabela Breeds
@@ -33,7 +38,11 @@ namespace TheCatRepository.Repositories
         /// <returns></returns>
         public async Task<ICollection<Breeds>> GetAllBreeds()
         {
-            return await theCatContext.Breeds.AsNoTracking().ToListAsync();
+            using (var conn = theCatContext.GetConnection)
+            {
+                var result = await conn.QueryAsync<Breeds>(queryBase);
+                return result.ToList();
+            }
         }
 
         /// <summary>
@@ -43,7 +52,11 @@ namespace TheCatRepository.Repositories
         /// <returns></returns>
         public async Task<Breeds> GetBreeds(string id)
         {
-            return await theCatContext.Breeds.FirstOrDefaultAsync(x => x.BreedsId == id);
+            using (var conn = theCatContext.GetConnection)
+            {
+                var result = await conn.QueryAsync<Breeds>($"{queryBase} WHERE BreedsId = '{id}'");
+                return result.FirstOrDefault();
+            }
         }
 
         /// <summary>
@@ -53,12 +66,12 @@ namespace TheCatRepository.Repositories
         /// <returns></returns>
         public async Task<ICollection<Breeds>> GetBreedsByTemperament(string temperament)
         {
-            return await theCatContext.Breeds
-                .Where(x => x.Temperament.Contains(temperament))
-                .AsNoTracking()
-                .ToListAsync();
+            using (var conn = theCatContext.GetConnection)
+            {
+                var result = await conn.QueryAsync<Breeds>($"{queryBase} WHERE Temperament like '%{temperament}%'");
+                return result.ToList();
+            }
         }
-
 
         /// <summary>
         /// Método traz todas as informações da tabela Breed que contenham a Origem passada
@@ -67,10 +80,11 @@ namespace TheCatRepository.Repositories
         /// <returns></returns>
         public async Task<ICollection<Breeds>> GetBreedsByOrigin(string origin)
         {
-            return await theCatContext.Breeds
-                .Where(x => x.Origin.Contains(origin))
-                .AsNoTracking()
-                .ToListAsync();
+            using (var conn = theCatContext.GetConnection)
+            {
+                var result = await conn.QueryAsync<Breeds>($"{queryBase} WHERE Origin like '%{origin}%'");
+                return result.ToList();
+            }
         }
 
         /// <summary>
@@ -84,8 +98,15 @@ namespace TheCatRepository.Repositories
                 return;
             else
             {
-                theCatContext.Add(breeds);
-                await theCatContext.SaveChangesAsync();
+                var sqlCommand =
+                    @"INSERT INTO breeds 
+                        (BreedsId, Name, Origin, Temperament, Description) 
+                      VALUES
+                        (@BreedsId, @Name, @Origin, @Temperament, @Description)";
+                using (var conn = theCatContext.GetConnection)
+                {
+                    await conn.ExecuteAsync(sqlCommand, breeds);
+                }
             }
         }
 
@@ -100,8 +121,17 @@ namespace TheCatRepository.Repositories
                 return;
             else
             {
-                theCatContext.Entry(breeds).State = EntityState.Modified;
-                await theCatContext.SaveChangesAsync();
+                var sqlCommand =
+                    @"UPDATE breeds SET 
+                        Name = @Name
+                        , Origin = @Origin
+                        , Temperament = @Temperament
+                        , Description = @Description
+                    WHERE BreedsId = @BreedsId";
+                using (var conn = theCatContext.GetConnection)
+                {
+                    await conn.ExecuteAsync(sqlCommand, breeds);
+                }
             }
         }
     }
