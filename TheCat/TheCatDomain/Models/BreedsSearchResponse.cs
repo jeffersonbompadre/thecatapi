@@ -1,5 +1,8 @@
 ﻿namespace TheCatDomain.Models
 {
+    /// <summary>
+    /// Classe que será desserializada na chamada do método Breeds da API TheCatAPI
+    /// </summary>
     public class BreedsSearchResponse
     {
         public string Id { get; set; }

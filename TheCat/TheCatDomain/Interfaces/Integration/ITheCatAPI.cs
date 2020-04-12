@@ -4,6 +4,10 @@ using TheCatDomain.Models;
 
 namespace TheCatDomain.Interfaces.Integration
 {
+    /// <summary>
+    /// Interface que especifica o contrato que deve ser seguido para implementar os métodos
+    /// necessários para coletar informações da TheCatAPI
+    /// </summary>
     public interface ITheCatAPI
     {
         Task<ICollection<BreedsSearchResponse>> GetBreeds();

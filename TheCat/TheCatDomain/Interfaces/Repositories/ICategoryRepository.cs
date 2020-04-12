@@ -4,6 +4,10 @@ using TheCatDomain.Entities;
 
 namespace TheCatDomain.Interfaces.Repositories
 {
+    /// <summary>
+    /// Interface que especifica o contrato que deve ser seguido para implementar os métodos
+    /// necessários para o repositório Category
+    /// </summary>
     public interface ICategoryRepository
     {
         Task<ICollection<Category>> GetAllCategory();

@@ -6,16 +6,27 @@ using Xunit;
 
 namespace TheCatTest.Integration
 {
+    /// <summary>
+    /// Classe resonsável por realizar os testes implementados na classe de integração com a API TheCatAPI
+    /// </summary>
     public class IntegrationTest
     {
+        // Fields que deverão ser instanciadas no construtor da classe de teste
+
         readonly ITheCatAPI theCatAPI;
 
+        /// <summary>
+        /// Construtor utilizado para instanciar as classes que serão testadas
+        /// </summary>
         public IntegrationTest()
         {
             var appSettings = AppConfiguration.GetAppSettings();
             theCatAPI = new TheCatAPIService(appSettings);
         }
 
+        /// <summary>
+        /// Realiza teste da chamada ao método Breeds da API TheCatAPI retornando todas inforações encontradas
+        /// </summary>
         [Fact]
         public async void GetBreedsTest()
         {
@@ -23,6 +34,9 @@ namespace TheCatTest.Integration
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// Realiza teste da chamada ao método Categories da API TheCatAPI retornando todas inforações encontradas
+        /// </summary>
         [Fact]
         public async void GetCategoriesTest()
         {
@@ -30,6 +44,10 @@ namespace TheCatTest.Integration
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// Realiza teste da chamada ao método Images/Search da API TheCatAPI retornando todas inforações encontradas
+        /// Filtrando pelo Id Category
+        /// </summary>
         [Fact]
         public async void GetImagesByCategoryTest()
         {
@@ -38,6 +56,10 @@ namespace TheCatTest.Integration
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// Realiza teste da chamada ao método Images/Search da API TheCatAPI retornando todas inforações encontradas
+        /// Filtrando pelo Id Breeds
+        /// </summary>
         [Fact]
         public async void GetImagesByBreedsTest()
         {
