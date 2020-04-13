@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TheCatAPIIntegration.Service;
 using TheCatApplication.Commands;
+using TheCatDomain.Interfaces;
 using TheCatDomain.Interfaces.Application;
 using TheCatDomain.Interfaces.Integration;
 using TheCatDomain.Interfaces.Repositories;
@@ -21,6 +22,8 @@ namespace TheCatTest.Application
     {
         // Fields que deverão ser instanciadas no construtor da classe de teste
 
+        readonly IAppConfiguration appConfiguration;
+        readonly TheCatDBContext theCatDBContext;
         readonly ITheCatAPI theCatAPI;
         readonly IBreedsRepository breedsRepository;
         readonly ICategoryRepository categoryRepository;
@@ -32,14 +35,13 @@ namespace TheCatTest.Application
         /// </summary>
         public ApplicationTest()
         {
-            var appSettings = AppConfiguration.GetAppSettings();
-            var contextDB = new TheCatDBContext(appSettings);
-
-            theCatAPI = new TheCatAPIService(appSettings);
-            breedsRepository = new BreedsRepository(contextDB);
-            categoryRepository = new CategoryRepository(contextDB);
-            imageUrlRepository = new ImageUrlRepository(contextDB);
-            commandCapture = new CommandCapture(appSettings, theCatAPI, breedsRepository, categoryRepository, imageUrlRepository);
+            appConfiguration = new AppConfiguration();
+            theCatDBContext = new TheCatDBContext(appConfiguration);
+            theCatAPI = new TheCatAPIService(appConfiguration);
+            breedsRepository = new BreedsRepository(theCatDBContext);
+            categoryRepository = new CategoryRepository(theCatDBContext);
+            imageUrlRepository = new ImageUrlRepository(theCatDBContext);
+            commandCapture = new CommandCapture(appConfiguration, theCatAPI, breedsRepository, categoryRepository, imageUrlRepository);
         }
 
         /// <summary>

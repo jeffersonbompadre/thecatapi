@@ -1,6 +1,7 @@
 ﻿using System.Data.Common;
 using System.Data.SqlClient;
 using TheCatDomain.Entities;
+using TheCatDomain.Interfaces;
 using TheCatDomain.Models;
 
 namespace TheCatRepository.Context
@@ -18,9 +19,9 @@ namespace TheCatRepository.Context
         /// Caso queria mudar o banco de dados, basta vir nesta classe e ajustar para o novo
         /// </summary>
         /// <param name="options"></param>
-        public TheCatDBContext(AppSettings appSettings)
+        public TheCatDBContext(IAppConfiguration appConfiguration)
         {
-            this.appSettings = appSettings;
+            this.appSettings = appConfiguration.GetAppSettings();
         }
 
         /// <summary>

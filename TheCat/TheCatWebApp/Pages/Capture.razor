@@ -1,0 +1,61 @@
+﻿@page "/capture"
+
+@inject ICommandCapture commandCapture
+
+<h1>Capturar</h1>
+
+<p>
+    Esta página tem a função de capturar informações do The Cat API e salvar em uma base de dados.
+    <br />
+    Para isso, utilize o botão abaixo para iniciar o processo.
+    <br />
+    <br />
+    <button type="button" disabled="@isDisabled" @onclick="@OnCatpure" class="btn btn-primary">Capturar</button>
+</p>
+
+@if (showCapturing)
+{
+    <p><img height="36" src="/images/hourglass_rotating_md_wm.gif" /><em> Processando, por favor aguarde (este processo pode levar alguns minutos)...</em></p>
+}
+
+<Alert Exibir="showMessage">
+    <h3>@Mensagem</h3>
+</Alert>
+
+@code {
+
+    bool isDisabled = false;
+    bool showCapturing = false;
+    bool showMessage = false;
+
+    [Parameter]
+    public string Mensagem { get; set; }
+
+    public async Task OnCatpure()
+    {
+        try
+        {
+            showMessage = false;
+            showCapturing = true;
+            isDisabled = true;
+
+            //await Task.Delay(3000);
+            await commandCapture.CapureAllBreedsWithImages();
+            await commandCapture.CaptureImagesByCategory();
+
+            showMessage = true;
+            Mensagem = "Processamento concluído com sucesso!";
+
+        }
+        catch (Exception ex)
+        {
+            showMessage = true;
+            Mensagem = $"Erro no processamento dos dados ...\n {ex.StackTrace}";
+        }
+        finally
+        {
+            showCapturing = false;
+            isDisabled = false;
+        }
+    }
+}

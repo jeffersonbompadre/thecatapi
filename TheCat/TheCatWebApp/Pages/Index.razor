@@ -1,0 +1,21 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+
+<h1>The Cat API - Case</h1>
+
+<p>
+    Bem vindo a aplicação para coletar informações da API de Gatos: <a href="https://thecatapi.com/" target="_blank">thecatapi.com.</a>
+    Estas informações serão armazenadas em uma base de dados e disponibilizadas através de uma API-REST.
+    Para consultas da API, serão criados logs e métricas de execução utilizando ferramentas como ELK.
+</p>
+
+<div class="alert alert-secondary" role="alert">
+    Para iniciar o processo de captura, utilize o menu lateral "Capturar" ou<button type="button" @onclick="@OnRedirectCapturar" class="btn btn-link">clique aqui</button>.
+</div>
+
+@code{
+    public void OnRedirectCapturar()
+    {
+        NavigationManager.NavigateTo("capture");
+    }
+}

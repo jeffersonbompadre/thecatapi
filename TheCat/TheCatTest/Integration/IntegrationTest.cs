@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using TheCatAPIIntegration.Service;
+using TheCatDomain.Interfaces;
 using TheCatDomain.Interfaces.Integration;
 using TheCatDomain.Models;
 using Xunit;
@@ -13,6 +14,7 @@ namespace TheCatTest.Integration
     {
         // Fields que deverão ser instanciadas no construtor da classe de teste
 
+        readonly IAppConfiguration appConfiguration;
         readonly ITheCatAPI theCatAPI;
 
         /// <summary>
@@ -20,8 +22,8 @@ namespace TheCatTest.Integration
         /// </summary>
         public IntegrationTest()
         {
-            var appSettings = AppConfiguration.GetAppSettings();
-            theCatAPI = new TheCatAPIService(appSettings);
+            appConfiguration = new AppConfiguration();
+            theCatAPI = new TheCatAPIService(appConfiguration);
         }
 
         /// <summary>

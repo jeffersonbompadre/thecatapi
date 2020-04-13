@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using TheCatDomain.Entities;
+using TheCatDomain.Interfaces;
 using TheCatDomain.Interfaces.Repositories;
 using TheCatDomain.Models;
 using TheCatRepository.Context;
@@ -20,6 +21,7 @@ namespace TheCatTest.Repositories
         readonly Breeds breedsBase;
         readonly Category categoryBase;
         readonly ImageUrl imageUrlBase;
+        readonly IAppConfiguration appConfiguration;
         readonly IBreedsRepository breedsRepository;
         readonly ICategoryRepository categoryRepository;
         readonly IImageUrlRepository imageUrlRepository;
@@ -29,8 +31,8 @@ namespace TheCatTest.Repositories
         /// </summary>
         public RepositoriesTest()
         {
-            var appSettings = AppConfiguration.GetAppSettings();
-            var contextDB = new TheCatDBContext(appSettings);
+            appConfiguration = new AppConfiguration();
+            var contextDB = new TheCatDBContext(appConfiguration);
 
             breedsBase = new Breeds("abys", "Abyssinian");
             breedsBase.SetOrigin("Egypt");

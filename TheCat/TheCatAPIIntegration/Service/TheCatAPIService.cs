@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using TheCatDomain.Interfaces;
 using TheCatDomain.Interfaces.Integration;
 using TheCatDomain.Models;
 
@@ -21,9 +22,9 @@ namespace TheCatAPIIntegration.Service
         /// da URL e métodos. Estas informações veem do arquivo AppSettings.json
         /// </summary>
         /// <param name="appSettings"></param>
-        public TheCatAPIService(AppSettings appSettings)
+        public TheCatAPIService(IAppConfiguration appConfiguration)
         {
-            this.appSettings = appSettings;
+            this.appSettings = appConfiguration.GetAppSettings();
         }
 
         /// <summary>

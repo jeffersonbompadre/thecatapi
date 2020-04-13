@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using TheCatDomain.Entities;
+using TheCatDomain.Interfaces;
 using TheCatDomain.Interfaces.Application;
 using TheCatDomain.Interfaces.Integration;
 using TheCatDomain.Interfaces.Repositories;
@@ -29,9 +30,9 @@ namespace TheCatApplication.Commands
         /// <param name="breedsRepository"></param>
         /// <param name="categoryRepository"></param>
         /// <param name="imageUrlRepository"></param>
-        public CommandCapture(AppSettings appSettings, ITheCatAPI theCatAPI, IBreedsRepository breedsRepository, ICategoryRepository categoryRepository, IImageUrlRepository imageUrlRepository)
+        public CommandCapture(IAppConfiguration appConfiguration, ITheCatAPI theCatAPI, IBreedsRepository breedsRepository, ICategoryRepository categoryRepository, IImageUrlRepository imageUrlRepository)
         {
-            this.appSettings = appSettings;
+            this.appSettings = appConfiguration.GetAppSettings();
             this.theCatAPI = theCatAPI;
             this.breedsRepository = breedsRepository;
             this.categoryRepository = categoryRepository;
