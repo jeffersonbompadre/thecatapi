@@ -55,6 +55,10 @@ Esta camada deve servir para orquestrar os demais projetos criados, para consegu
 Projeto será criado em .NET Core 3.1, no padrão Blazor Server, contendo interface WebService para que o usuário possa coletar informações e também uma API Rest com os métodos utilizados para expor informações coletadas. A principal vantagem nesta abordagem é que no mesmo projeto podemos ter a Interface e a API em uma única publicação.
 O projeto deverá utilizar o Swagger para expor a documentação da API permitindo com isso a iteração de forma documentada.
 
+Imagem 1: Interface do Swagger com a definição da API e métodos disponíveis. O Swagger também permite a execução dos mesmos.
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79273106-d8ff3280-7e78-11ea-8b38-0c578d7fd1d8.png)
+
 
 
 
