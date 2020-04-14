@@ -50,6 +50,10 @@ Criar projeto responsável em armazenar e consultar informações que foram cole
 #### Criar projeto Application
 Esta camada deve servir para orquestrar os demais projetos criados, para conseguir executar as funcionalidades requeridas.
 
+### Aplicação para coleta de dados / API para expor informações coletadas
+#### Criar projeto Blazor Server / API
+Projeto será criado em .NET Core 3.1, no padrão Blazor Server, contendo interface WebService para que o usuário possa coletar informações e também uma API Rest com os métodos utilizados para expor informações coletadas. A principal vantagem nesta abordagem é que no mesmo projeto podemos ter a Interface e a API em uma única publicação.
+O projeto deverá utilizar o Swagger para expor a documentação da API permitindo com isso a iteração de forma documentada.
 
 
 
