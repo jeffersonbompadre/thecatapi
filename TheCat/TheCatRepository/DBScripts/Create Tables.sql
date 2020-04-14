@@ -148,7 +148,7 @@ CREATE TABLE LogEvent
     EventDate DATETIME NOT NULL,
     EventType VARCHAR(60) NOT NULL,
     MethodName VARCHAR(255) NOT NULL,
-    ExecutionTime NUMERIC(12, 8) NOT NULL,
+    ExecutionTime BIGINT NOT NULL,
     ExecutionTimeFrmt VARCHAR(12) NOT NULL,
     Description VARCHAR(1024)
 )
