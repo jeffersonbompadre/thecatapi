@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheCatRepository", "TheCatR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheCatApplication", "TheCatApplication\TheCatApplication.csproj", "{91A850CB-4764-4833-A24E-9FB288C7E84B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCatWebApp", "TheCatWebApp\TheCatWebApp.csproj", "{25D34016-42DD-4B0C-B172-A47E353529CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheCatWebApp", "TheCatWebApp\TheCatWebApp.csproj", "{25D34016-42DD-4B0C-B172-A47E353529CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

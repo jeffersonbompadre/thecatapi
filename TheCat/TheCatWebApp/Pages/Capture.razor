@@ -1,6 +1,7 @@
 ﻿@page "/capture"
 
 @inject ICommandCapture commandCapture
+@inject NavigationManager NavigationManager
 
 <h1>Capturar</h1>
 
@@ -18,6 +19,13 @@
     <p><img height="36" src="/images/hourglass_rotating_md_wm.gif" /><em> Processando, por favor aguarde (este processo pode levar alguns minutos)...</em></p>
 }
 
+@if (showLinkQueryBreeds)
+{
+    <p>
+        Para consultar as raças capturadas utilize o menu lateral Raças ou<button type="button" @onclick="@OnRedirectBreeds" class="btn btn-link">clique aqui</button>.
+    </p>
+}
+
 <Alert Exibir="showMessage">
     <h3>@Mensagem</h3>
 </Alert>
@@ -27,6 +35,7 @@
     bool isDisabled = false;
     bool showCapturing = false;
     bool showMessage = false;
+    bool showLinkQueryBreeds = false;
 
     [Parameter]
     public string Mensagem { get; set; }
@@ -38,18 +47,21 @@
             showMessage = false;
             showCapturing = true;
             isDisabled = true;
+            showLinkQueryBreeds = false;
 
             //await Task.Delay(3000);
             await commandCapture.CapureAllBreedsWithImages();
             await commandCapture.CaptureImagesByCategory();
 
             showMessage = true;
+            showLinkQueryBreeds = true;
             Mensagem = "Processamento concluído com sucesso!";
 
         }
         catch (Exception ex)
         {
             showMessage = true;
+            showLinkQueryBreeds = false;
             Mensagem = $"Erro no processamento dos dados ...\n {ex.StackTrace}";
         }
         finally
@@ -57,5 +69,10 @@
             showCapturing = false;
             isDisabled = false;
         }
+    }
+
+    public void OnRedirectBreeds()
+    {
+        NavigationManager.NavigateTo("breeds");
     }
 }

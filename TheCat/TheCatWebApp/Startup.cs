@@ -14,7 +14,6 @@ using TheCatDomain.Interfaces.Repositories;
 using TheCatDomain.Models;
 using TheCatRepository.Context;
 using TheCatRepository.Repositories;
-using TheCatWebApp.Data;
 
 namespace TheCatWebApp
 {
@@ -60,8 +59,6 @@ namespace TheCatWebApp
             });
 
             // Injeção de Dependência
-            services.AddSingleton<WeatherForecastService>();
-
             services.AddScoped<IAppConfiguration, AppConfiguration>();
             services.AddScoped<TheCatDBContext>();
             services.AddScoped<IBreedsRepository, BreedsRepository>();

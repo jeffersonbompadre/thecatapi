@@ -1,0 +1,44 @@
+﻿@page "/breeds"
+
+@inject IBreedsRepository breedsRepository
+
+<h1>Lista Raças Capturadas</h1>
+
+@if (listOfBreeds == null)
+{
+    <p><img height="36" src="/images/hourglass_rotating_md_wm.gif" /><em> Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Origem</th>
+                <th>Temperamento</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var breeds in listOfBreeds)
+            {
+                <tr>
+                    <td><strong>@breeds.Name</strong></td>
+                    <td>@breeds.Origin</td>
+                    <td>@breeds.Temperament</td>
+                </tr>
+                <tr>
+                    <td colspan="3">@breeds.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private ICollection<Breeds> listOfBreeds;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listOfBreeds = await breedsRepository.GetAllBreeds();
+    }
+}

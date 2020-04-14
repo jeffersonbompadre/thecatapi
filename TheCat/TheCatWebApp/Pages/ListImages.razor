@@ -1,0 +1,78 @@
+﻿@page "/images"
+
+@inject ICategoryRepository categoryRepository
+@inject IImageUrlRepository imageUrlRepository
+
+<h3>Imagens por Categoria</h3>
+
+<div class="form-group">
+    <select @onchange="CategorySelectionChanged" class="form-control">
+        @if (categories != null)
+        {
+            @foreach (var category in categories)
+            {
+                <option value="@category.CategoryId">
+                    @category.Name
+                </option>
+            }
+        }
+    </select>
+</div>
+
+@if (images == null)
+{
+    <p><img height="36" src="/images/hourglass_rotating_md_wm.gif" /><em> Carregando...</em></p>
+}
+else if (images.Count == 0)
+{
+    <p><em>Não foram coletadas imagens para esta categoria...</em></p>
+}
+else
+{
+    <div class="row">
+        @foreach (var image in images)
+        {
+            <div class="col-sm-4 col-lg-4 col-md-4">
+                <div class="card" style="border: none">
+                    <img src="@image.Url" alt="" width="300" />
+                    <div class="card-body">
+                        <a class="pull-right" href="@image.Url" target="_blank">@image.Url</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+
+    ICollection<ImageUrl> images { get; set; }
+    ICollection<Category> categories { get; set; }
+    int? categoryId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await categoryRepository.GetAllCategory();
+        categoryId = categories.FirstOrDefault()?.CategoryId;
+        await LoadImagesByCategory();
+    }
+
+    async Task LoadImagesByCategory()
+    {
+        if (categoryId != null)
+        {
+            images = await imageUrlRepository.GetAllImageUrl();
+            images = images.Take(3).ToList();
+            StateHasChanged();
+        }
+    }
+
+    async void CategorySelectionChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            categoryId = id;
+            await LoadImagesByCategory();
+        }
+    }
+}
