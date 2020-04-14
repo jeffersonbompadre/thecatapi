@@ -2,122 +2,163 @@
     Script para criação das tabelas em um banco de dados SQL Server
 */
 
+-- Caso o database não exista, cria
+
+IF NOT Exists(
+    SELECT Name
+    FROM sys.databases
+    WHERE name = 'thecatdb' 
+)
+BEGIN
+    CREATE DATABASE thecatdb
+END
+GO
+
+USE thecatdb
+GO
+
 -- Caso as tabelas já existam, exclui
 --------------------------------------------------------------------
 
-if object_id('ImageUrlCategory', 'u') is not null begin
-  drop table ImageUrlCategory
-end
-go
+IF OBJECT_ID('ImageUrlCategory', 'u') IS NOT NULL BEGIN
+  DROP TABLE ImageUrlCategory
+END
+GO
 
-if object_id('ImageUrlBreeds', 'u') is not null begin
-  drop table ImageUrlBreeds
-end
-go
+IF OBJECT_ID('ImageUrlBreeds', 'u') IS NOT NULL BEGIN
+  DROP TABLE ImageUrlBreeds
+END
+GO
 
-if object_id('ImageUrl', 'u') is not null begin
-  drop table ImageUrl
-end
-go
+IF OBJECT_ID('ImageUrl', 'u') IS NOT NULL BEGIN
+  DROP TABLE ImageUrl
+END
+GO
 
-if object_id('Category', 'u') is not null begin
-  drop table Category
-end
-go
+IF OBJECT_ID('Category', 'u') IS NOT NULL BEGIN
+  DROP TABLE Category
+END
+GO
 
-if object_id('Breeds', 'u') is not null begin
-  drop table Breeds
-end
-go
+IF OBJECT_ID('Breeds', 'u') IS NOT NULL BEGIN
+  DROP TABLE Breeds
+END
+GO
+
+IF OBJECT_ID('LogEvent', 'u') IS NOT NULL BEGIN
+  DROP TABLE LogEvent
+END
+GO
 
 -- Cria as tabelas necessárias
 --------------------------------------------------------------------
 
-create table Breeds
+CREATE TABLE Breeds
 (
-    BreedsId varchar(80) not null,
-    Name varchar(255) not null,
-    Origin varchar(255),
-    Temperament varchar(255),
-    Description varchar(1024)
+    BreedsId VARCHAR(80) NOT NULL,
+    Name VARCHAR(255) NOT NULL,
+    Origin VARCHAR(255),
+    Temperament VARCHAR(255),
+    Description VARCHAR(1024)
 )
-go
+GO
 
-alter table Breeds add
-    Constraint PK_Breeds
-    Primary Key Clustered (BreedsId)
-go
+ALTER TABLE Breeds ADD
+    CONSTRAINT PK_Breeds
+    PRIMARY KEY CLUSTERED (BreedsId)
+GO
 
-create table Category
+CREATE TABLE Category
 (
-    CategoryId int not null,
-    Name varchar(255) not null
+    CategoryId INT NOT NULL,
+    Name VARCHAR(255) NOT NULL
 )
-go
+GO
 
-alter table Category add
-    Constraint PK_Category
-    Primary Key Clustered (CategoryId)
-go
+ALTER TABLE Category ADD
+    CONSTRAINT PK_Category
+    PRIMARY KEY CLUSTERED (CategoryId)
+GO
 
-create table ImageUrl
+CREATE TABLE ImageUrl
 (
-    ImageUrlId varchar(80) not null,
-    Url varchar(512) not null,
+    ImageUrlId VARCHAR(80) NOT NULL,
+    Url VARCHAR(512) NOT NULL,
     Width int,
     Height int
 )
-go
+GO
 
-alter table ImageUrl add
-    Constraint PK_ImageUrl
-    Primary Key Clustered (ImageUrlId)
-go
+ALTER TABLE ImageUrl ADD
+    CONSTRAINT PK_ImageUrl
+    PRIMARY KEY CLUSTERED (ImageUrlId)
+GO
 
-create table ImageUrlBreeds
+CREATE TABLE ImageUrlBreeds
 (
-    ImageUrlId varchar(80) not null,
-    BreedsId varchar(80) not null
+    ImageUrlId VARCHAR(80) NOT NULL,
+    BreedsId VARCHAR(80) NOT NULL
 )
-go
+GO
 
-alter table ImageUrlBreeds add
-    Constraint PK_ImageUrlBreeds
-    Primary Key Clustered (ImageUrlId, BreedsId)
-go
+ALTER TABLE ImageUrlBreeds ADD
+    CONSTRAINT PK_ImageUrlBreeds
+    PRIMARY KEY CLUSTERED (ImageUrlId, BreedsId)
+GO
 
-alter table ImageUrlBreeds add
-    Constraint FK_ImageUrlBreeds_ImageUrl
-    Foreign Key (ImageUrlId)
-    References ImageUrl (ImageUrlId)
-go
+ALTER TABLE ImageUrlBreeds ADD
+    CONSTRAINT FK_ImageUrlBreeds_ImageUrl
+    FOREIGN KEY (ImageUrlId)
+    REFERENCES ImageUrl (ImageUrlId)
+GO
 
-alter table ImageUrlBreeds add
-    Constraint FK_ImageUrlBreeds_Breeds
-    Foreign Key (BreedsId)
-    References Breeds (BreedsId)
-go
+ALTER TABLE ImageUrlBreeds ADD
+    CONSTRAINT FK_ImageUrlBreeds_Breeds
+    FOREIGN KEY (BreedsId)
+    REFERENCES Breeds (BreedsId)
+GO
 
-create table ImageUrlCategory
+CREATE TABLE ImageUrlCategory
 (
-    ImageUrlId varchar(80) not null,
-    CategoryId int not null
+    ImageUrlId VARCHAR(80) NOT NULL,
+    CategoryId INT NOT NULL
 )
-go
+GO
 
-alter table ImageUrlCategory add
-    Constraint PK_ImageUrlCategory
-    Primary Key Clustered (ImageUrlId, CategoryId)
-go
+ALTER TABLE ImageUrlCategory ADD
+    CONSTRAINT PK_ImageUrlCategory
+    PRIMARY KEY CLUSTERED (ImageUrlId, CategoryId)
+GO
 
-alter table ImageUrlCategory add
-    Constraint FK_ImageUrlCategory_ImageUrl
-    Foreign Key (ImageUrlId)
-    References ImageUrl (ImageUrlId)
-go
+ALTER TABLE ImageUrlCategory ADD
+    CONSTRAINT FK_ImageUrlCategory_ImageUrl
+    FOREIGN KEY (ImageUrlId)
+    REFERENCES ImageUrl (ImageUrlId)
+GO
 
-alter table ImageUrlCategory add
-    Constraint FK_ImageUrlCategory_Category
-    Foreign Key (CategoryId)
-    References Category (CategoryId)
-go
+ALTER TABLE ImageUrlCategory ADD
+    CONSTRAINT FK_ImageUrlCategory_Category
+    FOREIGN KEY (CategoryId)
+    REFERENCES Category (CategoryId)
+GO
+
+CREATE TABLE LogEvent
+(
+    LogEventId int NOT NULL IDENTITY(1,1),
+    EventDate DATETIME NOT NULL,
+    EventType VARCHAR(60) NOT NULL,
+    MethodName VARCHAR(255) NOT NULL,
+    ExecutionTime NUMERIC(12, 8) NOT NULL,
+    ExecutionTimeFrmt VARCHAR(12) NOT NULL,
+    Description VARCHAR(1024)
+)
+GO
+
+ALTER TABLE LogEvent ADD
+    CONSTRAINT PK_LogEvent
+    PRIMARY KEY CLUSTERED (LogEventId)
+GO
+
+CREATE INDEX IDX_AK_LogEvent_EventType ON LogEvent
+    (EventDate, EventType)
+GO

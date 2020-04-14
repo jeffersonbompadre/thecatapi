@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Entidade utilizada para mapear a tabela ImageUrl no banco de dados.
-    /// As propriedades são "fechadas" para aleteração, necessitando para serem alteradas utilizar um
+    /// As propriedades são "fechadas" para alteração, necessitando para serem alteradas utilizar um
     /// método específico que irá validar as informações
     /// </summary>
     public class ImageUrl
@@ -40,13 +40,13 @@
 
         public void SetImageUrlId(string id)
         {
-            if (IdIsValid())
+            if (IdIsValid(id))
                 ImageUrlId = id;
         }
 
         public void SetUrl(string url)
         {
-            if (UrlIsValid())
+            if (UrlIsValid(url))
                 Url = url;
         }
 
@@ -78,12 +78,13 @@
         /// Valida se o objeto está com as informações necessárias para ser persistido na base de dados
         /// </summary>
         /// <returns></returns>
-        public bool IsValid() => IdIsValid() && UrlIsValid();
+        public bool IsValid() =>
+            IdIsValid(ImageUrlId) &&
+            UrlIsValid(Url);
 
         // Métodos privados para consistir informações obrigatórias do objeto
 
-        bool IdIsValid() => (!string.IsNullOrEmpty(ImageUrlId) && ImageUrlId.Length <= 80);
-
-        bool UrlIsValid() => (!string.IsNullOrEmpty(Url) && Url.Length <= 512);
+        bool IdIsValid(string imageUrlId) => (!string.IsNullOrEmpty(imageUrlId) && imageUrlId.Length <= 80);
+        bool UrlIsValid(string url) => (!string.IsNullOrEmpty(url) && url.Length <= 512);
     }
 }

@@ -4,7 +4,7 @@ namespace TheCatDomain.Entities
 {
     /// <summary>
     /// Entidade utilizada para mapear a tabela Breeds no banco de dados.
-    /// As propriedades são "fechadas" para aleteração, necessitando para serem alteradas utilizar um
+    /// As propriedades são "fechadas" para alteração, necessitando para serem alteradas utilizar um
     /// método específico que irá validar as informações
     /// </summary>
     public class Breeds
@@ -40,31 +40,31 @@ namespace TheCatDomain.Entities
 
         public void SetBreedsId(string id)
         {
-            if (IdIsValid())
+            if (IdIsValid(id))
                 BreedsId = id;
         }
 
         public void SetName(string name)
         {
-            if (NameIsValid())
+            if (NameIsValid(name))
                 Name = name;
         }
 
         public void SetOrigin(string origin)
         {
-            if (!string.IsNullOrEmpty(origin) && origin.Length <= 255)
+            if (OriginIsValid(origin))
                 Origin = origin;
         }
 
         public void SetTemperament(string temperament)
         {
-            if (!string.IsNullOrEmpty(temperament) && temperament.Length <= 255)
+            if (TemperamentIsValid(temperament))
                 Temperament = temperament;
         }
 
         public void SetDescription(string description)
         {
-            if (!string.IsNullOrEmpty(description) && description.Length <= 1024)
+            if (DescriptionIsValid(description))
                 Description = description;
         }
 
@@ -72,12 +72,19 @@ namespace TheCatDomain.Entities
         /// Valida se o objeto está com as informações necessárias para ser persistido na base de dados
         /// </summary>
         /// <returns></returns>
-        public bool IsValid() => IdIsValid() && NameIsValid();
+        public bool IsValid() =>
+            IdIsValid(BreedsId) &&
+            NameIsValid(Name) &&
+            OriginIsValid(Origin) &&
+            TemperamentIsValid(Temperament) &&
+            DescriptionIsValid(Description);
 
         // Métodos privados para consistir informações obrigatórias do objeto
 
-        bool IdIsValid() => (!string.IsNullOrEmpty(BreedsId) && BreedsId.Length <= 80);
-
-        bool NameIsValid() => (!string.IsNullOrEmpty(Name) && Name.Length <= 255);
+        bool IdIsValid(string breedsId) => (!string.IsNullOrEmpty(breedsId) && breedsId.Length <= 80);
+        bool NameIsValid(string name) => (!string.IsNullOrEmpty(name) && name.Length <= 255);
+        bool OriginIsValid(string origin) => string.IsNullOrEmpty(origin) ? true : origin.Length <= 255;
+        bool TemperamentIsValid(string temperament) => string.IsNullOrEmpty(temperament) ? true : temperament.Length <= 255;
+        bool DescriptionIsValid(string description) => string.IsNullOrEmpty(description) ? true : description.Length <= 1024;
     }
 }

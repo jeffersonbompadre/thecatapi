@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using System.IO;
+using System.Reflection;
 using TheCatAPIIntegration.Service;
 using TheCatApplication.Commands;
 using TheCatDomain.Interfaces;
@@ -36,9 +38,9 @@ namespace TheCatWebApp
             services.AddControllers();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(opt =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
+                opt.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "TheCatWebApp",
                     Version = "v1",
@@ -56,6 +58,10 @@ namespace TheCatWebApp
                         Url = new Uri("https://github.com/jeffersonbompadre/thecatapi"),
                     }
                 });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                opt.IncludeXmlComments(xmlPath);
             });
 
             // Injeção de Dependência
@@ -64,6 +70,7 @@ namespace TheCatWebApp
             services.AddScoped<IBreedsRepository, BreedsRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IImageUrlRepository, ImageUrlRepository>();
+            services.AddScoped<ILogEventRepository, LogEventRepository>();
             services.AddScoped<ITheCatAPI, TheCatAPIService>();
             services.AddScoped<ICommandCapture, CommandCapture>();
         }

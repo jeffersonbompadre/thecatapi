@@ -4,7 +4,7 @@ namespace TheCatDomain.Entities
 {
     /// <summary>
     /// Entidade utilizada para mapear a tabela Category no banco de dados.
-    /// As propriedades são "fechadas" para aleteração, necessitando para serem alteradas utilizar um
+    /// As propriedades são "fechadas" para alteração, necessitando para serem alteradas utilizar um
     /// método específico que irá validar as informações
     /// </summary>
     public class Category
@@ -37,13 +37,13 @@ namespace TheCatDomain.Entities
 
         public void SetCategoryId(int id)
         {
-            if (IdIsValid())
+            if (IdIsValid(id))
                 CategoryId = id;
         }
 
         public void SetName(string name)
         {
-            if (NameIsValid())
+            if (NameIsValid(name))
                 Name = name;
         }
 
@@ -51,12 +51,13 @@ namespace TheCatDomain.Entities
         /// Valida se o objeto está com as informações necessárias para ser persistido na base de dados
         /// </summary>
         /// <returns></returns>
-        public bool IsValid() => IdIsValid() && NameIsValid();
+        public bool IsValid() =>
+            IdIsValid(CategoryId) &&
+            NameIsValid(Name);
 
         // Métodos privados para consistir informações obrigatórias do objeto
 
-        bool IdIsValid() => (CategoryId > 0);
-
-        bool NameIsValid() => (!string.IsNullOrEmpty(Name) && Name.Length <= 255);
+        bool IdIsValid(int categoryId) => (categoryId > 0);
+        bool NameIsValid(string name) => (!string.IsNullOrEmpty(name) && name.Length <= 255);
     }
 }

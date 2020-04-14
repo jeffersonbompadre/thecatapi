@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TheCatDomain.Entities;
+using TheCatDomain.Enumerables;
 using TheCatDomain.Interfaces;
 using TheCatDomain.Interfaces.Repositories;
 using TheCatDomain.Models;
@@ -26,6 +28,7 @@ namespace TheCatTest.Repositories
         readonly IBreedsRepository breedsRepository;
         readonly ICategoryRepository categoryRepository;
         readonly IImageUrlRepository imageUrlRepository;
+        readonly ILogEventRepository logEventRepository;
 
         /// <summary>
         /// Construtor utilizado para instanciar as classes que serão testadas
@@ -51,6 +54,7 @@ namespace TheCatTest.Repositories
             breedsRepository = new BreedsRepository(contextDB);
             categoryRepository = new CategoryRepository(contextDB);
             imageUrlRepository = new ImageUrlRepository(contextDB);
+            logEventRepository = new LogEventRepository(contextDB);
         }
 
         #region Breeds Test
@@ -254,6 +258,56 @@ namespace TheCatTest.Repositories
                 imageUrlInDB.SetCategory(categoryBase);
                 await imageUrlRepository.UpdateImageUrl(imageUrlInDB);
             }
+        }
+
+        #endregion
+
+        #region LogEvent Test
+
+        /// <summary>
+        /// Realiza teste para trazer todos os registros da tabela LogEvent conforme parâmetros.
+        /// Sempre executa a chamada do método Add, para garantir que existe pelo
+        /// menos um registro na tabela.
+        /// Caso o resultado seja nulo, o teste falhará
+        /// </summary>
+        [Fact]
+        public async void LogEventGetTest()
+        {
+            var startDate = DateTime.Now.AddDays(-15);
+            var finishDate = DateTime.Now;
+            var eventType = EnumEventType.AllEvents;
+
+            await AddLogEvent();
+            var result = await logEventRepository.GetLogEvents(startDate, finishDate, eventType);
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Garante que existirá pelo menos um registro na tabela, para que os testes de get sejam executados
+        /// obrigatórias na tabela
+        /// </summary>
+        /// <returns></returns>
+        async Task AddLogEvent()
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            await Task.Delay(1000);
+            stopWatch.Stop();
+            // Get the elapsed time as a TimeSpan value.
+            var ts = stopWatch.Elapsed;
+            // Format and display the TimeSpan value.
+            var elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:000}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds);
+            var eventLog = new LogEvent(
+                DateTime.Now,
+                EnumEventType.Test,
+                "AddLogEventTest",
+                ts.Ticks,
+                elapsedTime
+            );
+            eventLog.SetDescription($"Log armazenado a partir da execução dos testes");
+            await logEventRepository.AddLogEvent(eventLog);
         }
 
         #endregion
