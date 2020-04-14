@@ -11,7 +11,7 @@ namespace TheCatDomain.Interfaces.Repositories
     public interface IBreedsRepository
     {
         Task<ICollection<Breeds>> GetAllBreeds();
-        Task<Breeds> GetBreeds(string id);
+        Task<Breeds> GetBreeds(string idOrName);
         Task<ICollection<Breeds>> GetBreedsByTemperament(string temperament);
         Task<ICollection<Breeds>> GetBreedsByOrigin(string origin);
         Task AddBreeds(Breeds breeds);

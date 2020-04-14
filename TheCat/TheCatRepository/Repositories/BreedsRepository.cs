@@ -50,11 +50,11 @@ namespace TheCatRepository.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Breeds> GetBreeds(string id)
+        public async Task<Breeds> GetBreeds(string idOrName)
         {
             using (var conn = theCatContext.GetConnection)
             {
-                var result = await conn.QueryAsync<Breeds>($"{queryBase} WHERE BreedsId = '{id}'");
+                var result = await conn.QueryAsync<Breeds>($"{queryBase} WHERE BreedsId = '{idOrName}' OR Name like '%{idOrName}%'");
                 return result.FirstOrDefault();
             }
         }
