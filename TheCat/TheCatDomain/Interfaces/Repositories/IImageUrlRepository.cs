@@ -12,6 +12,7 @@ namespace TheCatDomain.Interfaces.Repositories
     {
         Task<ICollection<ImageUrl>> GetAllImageUrl();
         Task<ImageUrl> GetImageUrl(string id);
+        Task<ICollection<ImageUrl>> GetImageUrlByCategory(int id);
         Task AddImageUrl(ImageUrl imageUrl);
         Task UpdateImageUrl(ImageUrl imageUrl);
     }

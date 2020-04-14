@@ -15,9 +15,9 @@ namespace TheCatRepository.Repositories
     public class ImageUrlRepository : IImageUrlRepository
     {
         // Comandos base para serem concatenados
-        const string queryBase = 
-            @"SELECT ImageUrlId, Url, Width, Height 
-              FROM imageurl";
+        const string queryBase =
+            @"SELECT img.ImageUrlId, img.Url, img.Width, img.Height
+              FROM imageurl img";
 
         readonly TheCatDBContext theCatContext;
 
@@ -53,8 +53,23 @@ namespace TheCatRepository.Repositories
         {
             using (var conn = theCatContext.GetConnection)
             {
-                var result = await conn.QueryAsync<ImageUrl>($"{queryBase} WHERE ImageUrlId = '{id}'");
+                var result = await conn.QueryAsync<ImageUrl>($"{queryBase} WHERE img.ImageUrlId = '{id}'");
                 return result.FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// Método traz a informação da tabela ImageUrl através de CateogryId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ICollection<ImageUrl>> GetImageUrlByCategory(int id)
+        {
+            using (var conn = theCatContext.GetConnection)
+            {
+                var qryJoin = string.Concat(queryBase, " JOIN ImageUrlCategory imc on img.ImageUrlId = imc.ImageUrlId");
+                var result = await conn.QueryAsync<ImageUrl>($"{qryJoin} WHERE imc.CategoryId = {id}");
+                return result.ToList();
             }
         }
 

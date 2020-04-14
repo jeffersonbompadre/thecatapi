@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TheCatDomain.Entities;
 using TheCatDomain.Interfaces;
@@ -211,10 +212,25 @@ namespace TheCatTest.Repositories
         /// Caso o resultado seja nulo, o teste falhará
         /// </summary>
         [Fact]
-        public async void ImageUrlGetCategoryTest()
+        public async void ImageUrlGetTest()
         {
             await AddImageUrl();
             var result = await imageUrlRepository.GetImageUrl(imageUrlBase.ImageUrlId);
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Realiza teste para trazer um registro da tabela ImageUrl através de Category.
+        /// Sempre executa a chamada do método Add, para garantir que existe pelo
+        /// menos um registro na tabela.
+        /// Caso o resultado seja nulo, o teste falhará
+        /// </summary>
+        [Fact]
+        public async void ImageUrlGetByCategoryTest()
+        {
+            await AddImageUrl();
+            var category = await categoryRepository.GetAllCategory();
+            var result = await imageUrlRepository.GetImageUrlByCategory(category.FirstOrDefault().CategoryId);
             Assert.NotNull(result);
         }
 

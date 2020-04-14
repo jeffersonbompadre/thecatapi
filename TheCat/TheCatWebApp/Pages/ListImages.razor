@@ -61,7 +61,7 @@ else
     {
         if (categoryId != null)
         {
-            images = await imageUrlRepository.GetAllImageUrl();
+            images = await imageUrlRepository.GetImageUrlByCategory((int)categoryId);
             images = images.Take(3).ToList();
             StateHasChanged();
         }
