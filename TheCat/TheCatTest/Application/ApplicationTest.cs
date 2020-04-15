@@ -38,9 +38,9 @@ namespace TheCatTest.Application
             appConfiguration = new AppConfiguration();
             theCatDBContext = new TheCatDBContext(appConfiguration);
             theCatAPI = new TheCatAPIService(appConfiguration);
-            breedsRepository = new BreedsRepository(theCatDBContext);
-            categoryRepository = new CategoryRepository(theCatDBContext);
             imageUrlRepository = new ImageUrlRepository(theCatDBContext);
+            breedsRepository = new BreedsRepository(theCatDBContext, imageUrlRepository);
+            categoryRepository = new CategoryRepository(theCatDBContext);
             commandCapture = new CommandCapture(appConfiguration, theCatAPI, breedsRepository, categoryRepository, imageUrlRepository);
         }
 

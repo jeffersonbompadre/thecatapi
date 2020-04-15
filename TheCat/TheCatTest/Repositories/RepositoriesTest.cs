@@ -51,9 +51,9 @@ namespace TheCatTest.Repositories
             imageUrlBase.SetBreeds(breedsBase);
             imageUrlBase.SetCategory(categoryBase);
 
-            breedsRepository = new BreedsRepository(contextDB);
-            categoryRepository = new CategoryRepository(contextDB);
             imageUrlRepository = new ImageUrlRepository(contextDB);
+            breedsRepository = new BreedsRepository(contextDB, imageUrlRepository);
+            categoryRepository = new CategoryRepository(contextDB);
             logEventRepository = new LogEventRepository(contextDB);
         }
 
@@ -69,7 +69,7 @@ namespace TheCatTest.Repositories
         public async void BreedsGetAllTest()
         {
             await AddBreeds();
-            var result = await breedsRepository.GetAllBreeds();
+            var result = await breedsRepository.GetAllBreeds(true);
             Assert.NotNull(result);
         }
 
@@ -83,7 +83,7 @@ namespace TheCatTest.Repositories
         public async void BreedsGetBreedsTest()
         {
             await AddBreeds();
-            var result = await breedsRepository.GetBreeds(breedsBase.BreedsId);
+            var result = await breedsRepository.GetBreeds(breedsBase.BreedsId, true);
             Assert.NotNull(result);
         }
 
@@ -104,7 +104,7 @@ namespace TheCatTest.Repositories
         public async void BreedsGetByTemperamentTest(string temperament)
         {
             await AddBreeds();
-            var result = await breedsRepository.GetBreedsByTemperament(temperament);
+            var result = await breedsRepository.GetBreedsByTemperament(temperament, true);
             Assert.NotNull(result);
         }
 
@@ -120,7 +120,7 @@ namespace TheCatTest.Repositories
         public async void BreedsGetByOriginTest(string origin)
         {
             await AddBreeds();
-            var result = await breedsRepository.GetBreedsByOrigin(origin);
+            var result = await breedsRepository.GetBreedsByOrigin(origin, true);
             Assert.NotNull(result);
         }
 

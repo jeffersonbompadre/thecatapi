@@ -10,10 +10,10 @@ namespace TheCatDomain.Interfaces.Repositories
     /// </summary>
     public interface IBreedsRepository
     {
-        Task<ICollection<Breeds>> GetAllBreeds();
-        Task<Breeds> GetBreeds(string idOrName);
-        Task<ICollection<Breeds>> GetBreedsByTemperament(string temperament);
-        Task<ICollection<Breeds>> GetBreedsByOrigin(string origin);
+        Task<ICollection<Breeds>> GetAllBreeds(bool includeImages = false);
+        Task<Breeds> GetBreeds(string idOrName, bool includeImages = false);
+        Task<ICollection<Breeds>> GetBreedsByTemperament(string temperament, bool includeImages = false);
+        Task<ICollection<Breeds>> GetBreedsByOrigin(string origin, bool includeImages = false);
         Task AddBreeds(Breeds breeds);
         Task UpdateBreeds(Breeds breeds);
     }

@@ -74,6 +74,21 @@ namespace TheCatRepository.Repositories
         }
 
         /// <summary>
+        /// Método traz a informação da tabela ImageUrl através de BreedsId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ICollection<ImageUrl>> GetImageUrlByBreeds(string id)
+        {
+            using (var conn = theCatContext.GetConnection)
+            {
+                var qryJoin = string.Concat(queryBase, " JOIN ImageUrlBreeds imb on img.ImageUrlId = imb.ImageUrlId");
+                var result = await conn.QueryAsync<ImageUrl>($"{qryJoin} WHERE imb.BreedsId = '{id}'");
+                return result.ToList();
+            }
+        }
+
+        /// <summary>
         /// Método adiciona um registro na tabela ImageUrl, caso o objeto imageUrl passado seja válido
         /// </summary>
         /// <param name="imageUrl"></param>

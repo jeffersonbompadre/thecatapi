@@ -28,7 +28,7 @@ namespace TheCatWebApp.Controllers
         [Route("listatodasracas")]
         public async Task<IEnumerable<Breeds>> GetAllBreeds()
         {
-            return await breedsRepository.GetAllBreeds();
+            return await breedsRepository.GetAllBreeds(true);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace TheCatWebApp.Controllers
         [Route("buscaraca")]
         public async Task<Breeds> GetBreeds(string codigoOuNome)
         {
-            return await breedsRepository.GetBreeds(codigoOuNome);
+            return await breedsRepository.GetBreeds(codigoOuNome, true);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace TheCatWebApp.Controllers
         [Route("buscaracaportemperamento")]
         public async Task<IEnumerable<Breeds>> GetBreedsByTemperament(string temperamento)
         {
-            return await breedsRepository.GetBreedsByTemperament(temperamento);
+            return await breedsRepository.GetBreedsByTemperament(temperamento, true);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace TheCatWebApp.Controllers
         [Route("buscaracapororigem")]
         public async Task<IEnumerable<Breeds>> GetBreedsByOrigin(string origem)
         {
-            return await breedsRepository.GetBreedsByOrigin(origem);
+            return await breedsRepository.GetBreedsByOrigin(origem, true);
         }
     }
 }

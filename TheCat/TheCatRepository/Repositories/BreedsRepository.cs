@@ -20,26 +20,30 @@ namespace TheCatRepository.Repositories
               FROM breeds";
 
         readonly TheCatDBContext theCatContext;
+        readonly IImageUrlRepository imageUrlRepository;
 
         /// <summary>
         /// Construtor da classe: Espera um DBContext responsável por acessar a base e que implementa os
         /// comandos de banco de dados
         /// </summary>
         /// <param name="theCatContext"></param>
-        public BreedsRepository(TheCatDBContext theCatContext)
+        public BreedsRepository(TheCatDBContext theCatContext, IImageUrlRepository imageUrlRepository)
         {
             this.theCatContext = theCatContext;
+            this.imageUrlRepository = imageUrlRepository;
         }
 
         /// <summary>
         /// Método traz todas as as informações da tabela Breeds
         /// </summary>
         /// <returns></returns>
-        public async Task<ICollection<Breeds>> GetAllBreeds()
+        public async Task<ICollection<Breeds>> GetAllBreeds(bool includeImages = false)
         {
             using (var conn = theCatContext.GetConnection)
             {
                 var result = await conn.QueryAsync<Breeds>(queryBase);
+                if (includeImages)
+                    await FillImageInBreedsObject(result.ToList());
                 return result.ToList();
             }
         }
@@ -49,11 +53,13 @@ namespace TheCatRepository.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Breeds> GetBreeds(string idOrName)
+        public async Task<Breeds> GetBreeds(string idOrName, bool includeImages = false)
         {
             using (var conn = theCatContext.GetConnection)
             {
                 var result = await conn.QueryAsync<Breeds>($"{queryBase} WHERE BreedsId = '{idOrName}' OR Name like '%{idOrName}%'");
+                if (includeImages)
+                    await FillImageInBreedsObject(result.FirstOrDefault());
                 return result.FirstOrDefault();
             }
         }
@@ -63,11 +69,13 @@ namespace TheCatRepository.Repositories
         /// </summary>
         /// <param name="temperament"></param>
         /// <returns></returns>
-        public async Task<ICollection<Breeds>> GetBreedsByTemperament(string temperament)
+        public async Task<ICollection<Breeds>> GetBreedsByTemperament(string temperament, bool includeImages = false)
         {
             using (var conn = theCatContext.GetConnection)
             {
                 var result = await conn.QueryAsync<Breeds>($"{queryBase} WHERE Temperament like '%{temperament}%'");
+                if (includeImages)
+                    await FillImageInBreedsObject(result.ToList());
                 return result.ToList();
             }
         }
@@ -77,11 +85,13 @@ namespace TheCatRepository.Repositories
         /// </summary>
         /// <param name="origin"></param>
         /// <returns></returns>
-        public async Task<ICollection<Breeds>> GetBreedsByOrigin(string origin)
+        public async Task<ICollection<Breeds>> GetBreedsByOrigin(string origin, bool includeImages = false)
         {
             using (var conn = theCatContext.GetConnection)
             {
                 var result = await conn.QueryAsync<Breeds>($"{queryBase} WHERE Origin like '%{origin}%'");
+                if (includeImages)
+                    await FillImageInBreedsObject(result.ToList());
                 return result.ToList();
             }
         }
@@ -132,6 +142,17 @@ namespace TheCatRepository.Repositories
                     await conn.ExecuteAsync(sqlCommand, breeds);
                 }
             }
+        }
+
+        async Task FillImageInBreedsObject(ICollection<Breeds> listBreeds)
+        {
+            foreach (var breeds in listBreeds)
+                await FillImageInBreedsObject(breeds);
+        }
+
+        async Task FillImageInBreedsObject(Breeds breeds)
+        {
+            breeds.Images = await imageUrlRepository.GetImageUrlByBreeds(breeds.BreedsId);
         }
     }
 }
