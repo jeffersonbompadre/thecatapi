@@ -50,7 +50,38 @@ Criar projeto responsável em armazenar e consultar informações que foram cole
 #### Criar projeto Application
 Esta camada deve servir para orquestrar os demais projetos criados, para conseguir executar as funcionalidades requeridas.
 
+### Aplicação para coleta de dados / API para expor informações coletadas
+#### Criar projeto Blazor Server / API
+Projeto será criado em .NET Core 3.1, no padrão Blazor Server, contendo interface WebService para que o usuário possa coletar informações e também uma API Rest com os métodos utilizados para expor informações coletadas. A principal vantagem nesta abordagem é que no mesmo projeto podemos ter a Interface e a API em uma única publicação.
+O projeto deverá utilizar o Swagger para expor a documentação da API permitindo com isso a iteração de forma documentada.
 
+Imagem 1: Interface do Swagger com a definição da API e métodos disponíveis. O Swagger também permite a execução dos mesmos.
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79273106-d8ff3280-7e78-11ea-8b38-0c578d7fd1d8.png)
+
+
+# Arquitetura do Projeto
+
+
+
+
+# Instalação
+## Softwares necessários
+
+A aplicação foi desenvolvida utilizando a tecnlogia .NET Core 3.1 com banco de dados SQL Server (Express). Para execução será necessário a instalação do .NET Runtime, mas para realizar ajustes, compilar, publicar será necessário também o pacote SDK do .NET Core. Como ferramenta de desenvolvimento foi utilizado Visual Studio 2019 (pode ser a versão community), mas também pode ser utilizado o Visual Code. A lista a seguir exibe os softwares necessários para a execução / manutenção da aplicação:
+
+- ASP.NET Core Runtime 3.1.3 - https://dotnet.microsoft.com/download/dotnet-core/thank-you/runtime-aspnetcore-3.1.3-windows-x64-installer
+- .NET SDK 3.1.201 - https://dotnet.microsoft.com/download/dotnet-core/thank-you/sdk-3.1.201-windows-x64-installer
+- SQL Server (Express) - https://www.microsoft.com/pt-br/download/details.aspx?id=55994
+- SQL Management Studio SSMS - https://docs.microsoft.com/pt-br/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15
+- Visual Code - https://code.visualstudio.com/download
+- Git Bash (para baixar o repositório) - https://git-scm.com/download/win
+- PostMan - https://www.postman.com/downloads/
+
+
+## Instruções para executar / publicar a aplicação
+
+Após baixar e instalar os softwares necessários, crie uma pasta de sua preferência e baixe o repositório utilizando o GitBash através do comando **git clonse https://github.com/jeffersonbompadre/thecatapi.git**
 
 
 
