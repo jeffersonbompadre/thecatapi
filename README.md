@@ -81,7 +81,16 @@ A aplicação foi desenvolvida utilizando a tecnlogia .NET Core 3.1 com banco de
 
 ## Instruções para executar / publicar a aplicação
 
-Após baixar e instalar os softwares necessários, crie uma pasta de sua preferência e baixe o repositório utilizando o GitBash através do comando **git clonse https://github.com/jeffersonbompadre/thecatapi.git**
+- Após baixar e instalar os softwares necessários, *lembrando que todos softwares listados são de uso free*, crie uma pasta de sua preferência e baixe o repositório utilizando o GitBash através do comando **git clonse https://github.com/jeffersonbompadre/thecatapi.git**
+
+- Abra o SQL Management Studio, conecte-se e execute o arquivo **(Minha Pasta)**\thecatapi\TheCat\TheCatRepository\DBScripts\Create Tables.sql. Ele irá criar o database e também as tabelas necessárias.
+
+- Nas pastas: **(Minha Pasta)**\thecatapi\TheCat\TheCatDomain\Data e **(Minha Pasta)**\thecatapi\TheCat\TheCatWebApp\Data edite os arquivos *appsettings.json*, na tag: ConnectionString e ajuste as configurações de servidor, usuário e senha para conexão com o banco de dados.
+
+- Abra o prompt de comando e acesse a pasta **(Minha Pasta)**\thecatapi\TheCat, que é a pasta raíz da solução. Execute o comando: **dotnet build**, isso irá compilar todos os projetos da solução.
+
+- Ainda no prompt de comando, acesse a pasta **(Minha Pasta)**\thecatapi\TheCat\TheCatWebApp e execute o comando: **dotnet run**, isso irá executar a aplicação, tanto para captura quanto para publicação das APIs. Abre um browser (Chrome, por exemplo) e acesse: **https://localhost:5001**, este endereço irá abrir a aplicação, onde conterá informações de uso. Para acessar as APIs, abra uma outra guia e informe: **https://localhost:5001/swagger**, neste caso, será aberto uma interface com os métodos API disponibilizados, e estes poderão ser executados, conforme imagem a seguir:
+
 
 
 
