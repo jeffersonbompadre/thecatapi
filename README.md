@@ -173,5 +173,20 @@ Obs.: Mantenta a aplicação em execução (instruções para compilar e executa
 ![Alt text](https://user-images.githubusercontent.com/13984252/79453825-98123580-7fc0-11ea-95fd-f87ebb02cc41.png)
 
 ## Executandos as APIs através do PostMan
+Obs.: Mantenta a aplicação em execução (instruções para compilar e executar a aplicação)
 
+- Abra o Postman, na aba para execução da API, informe os endereços das API disponibilizadas e clique no Send, conforme imagem a seguir:
+
+Endereços:
+
+- http://localhost:5000/api/v1/Breeds/listatodasracas (não necessita de parâmetro)
+
+
+- http://localhost:5000/api/v1/Breeds/buscaraca?idOrName=abob
+
+
+- http://localhost:5000/api/v1/Breeds/buscaracaportemperamento?temperamento=Intelligent
+
+
+- http://localhost:5000/api/v1/Breeds/buscaracapororigem?origem=egypt
 
