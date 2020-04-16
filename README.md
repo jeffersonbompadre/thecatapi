@@ -91,8 +91,25 @@ Com as informações coletadas (que serão geradas a cada iteração com a API),
 
 # Arquitetura do Projeto
 
+## Desenho
+![Alt text](https://user-images.githubusercontent.com/13984252/79446320-6b582100-7fb4-11ea-8202-42e2281d6239.png)
 
+## Detalhamento
 
+### Camadas
+
+- **WebAPI**: Projeto WebAPI (Blazor Server e API), responsável em disponibilizar interace com o usuário e publicação das APIs que disponibilizarão as informações coletadas.
+- **Aplicação**: Projeto ClassLibrary, responsável em orquestrar os métodos disponibilizados na camada de Integração e Repositório afim de chamar a TheCatAPI, coletar dados e armazenar na base de dados.
+- **Repositório**: Projeto ClassLibrary, responsável em se comunicar com o banco de dados, tanto para commands (inserir e atualizar registros) como para queries (consultas de informações), utilizando conexão nativa com SQL Server e Dapper.
+- **Integração**: Projeto ClassLibrary, responsável em fazer a comunicação com TheCatAPI
+- **Domínio**: Projeto ClassLibrary, responsável em disponibilizar as Entidades (utilizadas para mapeamento de banco de dados), Modelos (utilizados no retorno dos métodos chamados na integração com TheCatAPI) e também disponibilizar as Interfaces (contratos) que as demais camadas devem seguir para serem implementadas.
+- **Teste**: Projeto ClassLibrary, utilizando XUnit para realizar testes unitários dos métodos implementados nas outras camadas.
+
+### Descritivo
+
+O projeto foi idealizado utilizando práticas como SOLID, TDD onde cada camada (projeto) tem sua responsabilidade e dentro deles, cada classe também tem sua responsabilidade. Foi utilizado o conceito de *Inversão de Controle* deixando assim o código o menos acoplado possível. No projeto *WebAPI*, na classe Startup é utilizado Injeção de Dependência em complemento com a inversão de controle.
+
+Todo código está documentado facilitando assim o entendimento do mesmo.
 
 # Instalação
 
