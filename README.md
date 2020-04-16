@@ -181,12 +181,16 @@ Endereços:
 
 - http://localhost:5000/api/v1/Breeds/listatodasracas (não necessita de parâmetro)
 
+![Alt text](https://user-images.githubusercontent.com/13984252/79461395-7dde5480-7fcc-11ea-9eb2-aac239cd0179.png)
 
 - http://localhost:5000/api/v1/Breeds/buscaraca?idOrName=abob
 
+![Alt text](https://user-images.githubusercontent.com/13984252/79461400-82a30880-7fcc-11ea-80b0-cc13ce58ccfb.png)
 
 - http://localhost:5000/api/v1/Breeds/buscaracaportemperamento?temperamento=Intelligent
 
+![Alt text](https://user-images.githubusercontent.com/13984252/79461416-88005300-7fcc-11ea-8684-825ed940791b.png)
 
 - http://localhost:5000/api/v1/Breeds/buscaracapororigem?origem=egypt
 
+![Alt text](https://user-images.githubusercontent.com/13984252/79461425-89ca1680-7fcc-11ea-884b-05a951d8ad58.png)
