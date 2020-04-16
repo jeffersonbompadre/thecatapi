@@ -125,7 +125,7 @@ A aplicação foi desenvolvida utilizando a tecnlogia .NET Core 3.1 com banco de
 - Git Bash (para baixar o repositório) - https://git-scm.com/download/win
 - PostMan - https://www.postman.com/downloads/
 
-## Instruções para executar / publicar a aplicação
+## Instruções para compilar e executar a aplicação
 
 - Após baixar e instalar os softwares necessários, *lembrando que todos softwares listados são de uso free*, crie uma pasta de sua preferência e baixe o repositório utilizando o GitBash através do comando **git clonse https://github.com/jeffersonbompadre/thecatapi.git**
 
@@ -137,8 +137,17 @@ A aplicação foi desenvolvida utilizando a tecnlogia .NET Core 3.1 com banco de
 
 ![Alt text](https://user-images.githubusercontent.com/13984252/79451513-0d7c0700-7fbd-11ea-93a8-d43dece83a62.png)
 
-- Ainda no prompt de comando, acesse a pasta **(Minha Pasta)**\thecatapi\TheCat\TheCatWebApp e execute o comando: **dotnet run**, isso irá executar a aplicação, tanto para captura quanto para publicação das APIs. Abre um browser (Chrome, por exemplo) e acesse: **https://localhost:5001**, este endereço irá abrir a aplicação, onde conterá informações de uso. Para acessar as APIs, abra uma outra guia e informe: **https://localhost:5001/swagger**, neste caso, será aberto uma interface com os métodos API disponibilizados, e estes poderão ser executados, conforme imagem a seguir:
+- Ainda no prompt de comando, acesse a pasta **(Minha Pasta)**\thecatapi\TheCat\TheCatWebApp e execute o comando: **dotnet run**, isso irá executar a aplicação, tanto para captura quanto para publicação das APIs.
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79452116-04d80080-7fbe-11ea-90e0-6f3356bd369e.png)
+
+# Manual de uso
+
+## Aplicação para coletar informações da TheCatAPI
+Obs.: Mantenta a aplicação em execução (instruções para compilar e executar a aplicação)
+
+- Abra o browser (Chrome, por exemplo) e acesse: **http://localhost:5000**, este endereço irá abrir a aplicação, onde conterá intruções de uso.
 
 
 
-
+-Para acessar as APIs, abra uma outra guia e informe: **http://localhost:500/swagger**, neste caso, será aberto uma interface com os métodos API disponibilizados.
