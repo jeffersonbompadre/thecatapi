@@ -45,9 +45,12 @@ Neste projeto, serão definidas:
 - Interfaces: Assinaturas abstratas definindo o comportamento que as classes criadas em outros projetos deverão seguir.  
 
 #### Criar projeto de interfaces de integração
-Criar um projeto que permita a interface de Integração com o The-Cat.
+Criar um projeto que permita a interface de Integração com o The-Cat API e exporar logs.
 
-- Este projeto será responsável em fazer as chamadas da API TheCat e retornar as informações serializadas para um objeto facilitando assim a manipulação dos dados.
+Este projeto será responsável em fazer as integrações com
+
+- API TheCat e retornar as informações serializadas para um objeto facilitando assim a manipulação dos dados.
+- Logs integrando com ELK (Elasticserach e Kibana).
 
 #### Criar projeto de persistência da aplicação
 Criar projeto responsável em armazenar e consultar informações que foram coletadas do The-Cat
@@ -76,7 +79,6 @@ As seguir as informações que serão disponibilizadas:
 - Tipo do evento (Debug, Warning, Info, Error)
 - Nome do método que disparou o evento
 - Tempo de execução (em milisegundos)
-- Tempo de execução (formatado em hora, minuto, segundo e milisegundo)
 - Descrição do Evento (se necessário)
 
 ### Monitoramento de infraestrutura
@@ -101,7 +103,7 @@ Com as informações coletadas (que serão geradas a cada iteração com a API),
 - **WebAPI**: Projeto WebAPI (Blazor Server e API), responsável em disponibilizar interace com o usuário e publicação das APIs que disponibilizarão as informações coletadas.
 - **Aplicação**: Projeto ClassLibrary, responsável em orquestrar os métodos disponibilizados na camada de Integração e Repositório afim de chamar a TheCatAPI, coletar dados e armazenar na base de dados.
 - **Repositório**: Projeto ClassLibrary, responsável em se comunicar com o banco de dados, tanto para commands (inserir e atualizar registros) como para queries (consultas de informações), utilizando conexão nativa com SQL Server e Dapper.
-- **Integração**: Projeto ClassLibrary, responsável em fazer a comunicação com TheCatAPI
+- **Integração**: Projeto ClassLibrary, responsável em fazer a comunicação com TheCatAPI através de chamadas *POST* e *GET* utilizando para isso recursos nativos do .NET como o HttClient. Para a integração com o ELK (Elasticsearch e Kibana), será implementado através da interface **ILogger** do .NET o *ELKLogger* responsável em fazer as chamadas para a API do *Elasticsearch*, o *ELKLoggerProvider* e o *ELKLoggerExtensions* para que possa ser atribuído como um novo provedor para logging nativo do .NET, que será realizado na classe **Program**.
 - **Domínio**: Projeto ClassLibrary, responsável em disponibilizar as Entidades (utilizadas para mapeamento de banco de dados), Modelos (utilizados no retorno dos métodos chamados na integração com TheCatAPI) e também disponibilizar as Interfaces (contratos) que as demais camadas devem seguir para serem implementadas.
 - **Teste**: Projeto ClassLibrary, utilizando XUnit para realizar testes unitários dos métodos implementados nas outras camadas.
 
@@ -124,6 +126,8 @@ A aplicação foi desenvolvida utilizando a tecnlogia .NET Core 3.1 com banco de
 - Visual Code - https://code.visualstudio.com/download
 - Git Bash (para baixar o repositório) - https://git-scm.com/download/win
 - PostMan - https://www.postman.com/downloads/
+- ElasticSearch - https://www.elastic.co/pt/downloads/elasticsearch
+- Kibana - https://www.elastic.co/pt/downloads/kibana
 
 ## Instruções para compilar e executar a aplicação
 
@@ -140,6 +144,10 @@ A aplicação foi desenvolvida utilizando a tecnlogia .NET Core 3.1 com banco de
 - Ainda no prompt de comando, acesse a pasta **(Minha Pasta)**\thecatapi\TheCat\TheCatWebApp e execute o comando: **dotnet run**, isso irá executar a aplicação, tanto para captura quanto para publicação das APIs.
 
 ![Alt text](https://user-images.githubusercontent.com/13984252/79452116-04d80080-7fbe-11ea-90e0-6f3356bd369e.png)
+
+- O Elasticsearch deve estar em excução para que as chamadas a API possa enviar informações de logs. (Como exemplo, o ElasticSearch e o Kibana foram descompactados a partir da pasta raíz ELK). Acessar a pasta **C:\ELK\elasticsearch\bin** e executar o bat: **elasticsearch.bat**, após carregar, poderá ser utilizado o endereço: http://localhost:9200/.
+
+- O Kibana deve estar em execução para visualiar as informações coletadas pelo Elasticsearch, para isso, acessar a pasta **C:\ELK\kibana\bin** e executar o bat: **kibana.bat**, após carregar, poderá ser utilizado o endereço: http://localhost:5601/ para visualizar as informações, visões e dashboards. No caso da aplicação o TheCatLog - Dashboard. 
 
 # Manual de uso
 
@@ -194,3 +202,13 @@ Endereços:
 - http://localhost:5000/api/v1/Breeds/buscaracapororigem?origem=egypt
 
 ![Alt text](https://user-images.githubusercontent.com/13984252/79461425-89ca1680-7fcc-11ea-884b-05a951d8ad58.png)
+
+## Monitorando as informações no Kibana
+
+- Acessando o endereço: http://localhost:5601/, vá no menu: Dashboard e localize o dashboard: TheCatLog - Dashboard para visualizar os gráficos, conforme imagem a seguir:
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79875694-5e766b80-83c0-11ea-917c-0654c3626b25.png)
+
+- Para acessar detalhes das informações, poderá ser utilizado o menu Discovery do Kibana, localizando o TheCatLog information, poderá ter uma lista das informações que foram geradas, conforme imagem a seguir:
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79875681-5c141180-83c0-11ea-964a-d6a9e1a8e96a.png)
