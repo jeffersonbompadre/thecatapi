@@ -125,8 +125,7 @@ A aplicação foi desenvolvida utilizando a tecnlogia .NET Core 3.1 com banco de
 - Git Bash (para baixar o repositório) - https://git-scm.com/download/win
 - PostMan - https://www.postman.com/downloads/
 
-
-## Instruções para executar / publicar a aplicação
+## Instruções para compilar e executar a aplicação
 
 - Após baixar e instalar os softwares necessários, *lembrando que todos softwares listados são de uso free*, crie uma pasta de sua preferência e baixe o repositório utilizando o GitBash através do comando **git clonse https://github.com/jeffersonbompadre/thecatapi.git**
 
@@ -136,10 +135,62 @@ A aplicação foi desenvolvida utilizando a tecnlogia .NET Core 3.1 com banco de
 
 - Abra o prompt de comando e acesse a pasta **(Minha Pasta)**\thecatapi\TheCat, que é a pasta raíz da solução. Execute o comando: **dotnet build**, isso irá compilar todos os projetos da solução.
 
+![Alt text](https://user-images.githubusercontent.com/13984252/79451513-0d7c0700-7fbd-11ea-93a8-d43dece83a62.png)
 
+- Ainda no prompt de comando, acesse a pasta **(Minha Pasta)**\thecatapi\TheCat\TheCatWebApp e execute o comando: **dotnet run**, isso irá executar a aplicação, tanto para captura quanto para publicação das APIs.
 
-- Ainda no prompt de comando, acesse a pasta **(Minha Pasta)**\thecatapi\TheCat\TheCatWebApp e execute o comando: **dotnet run**, isso irá executar a aplicação, tanto para captura quanto para publicação das APIs. Abre um browser (Chrome, por exemplo) e acesse: **https://localhost:5001**, este endereço irá abrir a aplicação, onde conterá informações de uso. Para acessar as APIs, abra uma outra guia e informe: **https://localhost:5001/swagger**, neste caso, será aberto uma interface com os métodos API disponibilizados, e estes poderão ser executados, conforme imagem a seguir:
+![Alt text](https://user-images.githubusercontent.com/13984252/79452116-04d80080-7fbe-11ea-90e0-6f3356bd369e.png)
 
+# Manual de uso
 
+## Aplicação para coletar informações da TheCatAPI
+Obs.: Mantenta a aplicação em execução (instruções para compilar e executar a aplicação)
 
+- Abra o browser (Chrome, por exemplo) e acesse: **http://localhost:5000**, este endereço irá abrir a aplicação, onde conterá intruções de uso. A primeira página que será aberta é a Home. Para iniciar a captura das informações, o menu lateral: Capturar ou o link da própria página clique aqui, conforme a imagem a seguir destaca com as setas.
 
+![Alt text](https://user-images.githubusercontent.com/13984252/79453676-6305e300-7fc0-11ea-9e72-9a374ae7d514.png)
+
+- Página Capturar. Nesta página terá um botão (conforme detacado na imagem a seguir) que ao clicar iniciará a captura das Raças, Imagens associadas a raça e 3 imagens para categoria e 3 imagens Chapéu e Óculos.
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79453710-6e590e80-7fc0-11ea-9837-37480e2d1fa8.png)
+
+- Página Raças. Esta página poder ser utilizada para consultar as raças que foram coletadas, conforme imagem a seguir:
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79453730-744eef80-7fc0-11ea-8c7d-ce5f5edf0883.png)
+
+- Página Imagens. Esta página poder ser utilizada para consultar as 3 imagens capturadas para Chapéu e Óculos, para isso, basta selecionar hat ou sunglesses e as imagens3  serão exibidas, conforme imagem a seguir:
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79453739-7749e000-7fc0-11ea-9998-5139014e23ee.png)
+
+- Para acessar as APIs, abra uma outra guia e informe: **http://localhost:500/swagger**, neste caso, será aberto uma interface com os métodos API disponibilizados, conforme imagem a seguir:
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79273106-d8ff3280-7e78-11ea-8b38-0c578d7fd1d8.png)
+
+- Para executar os métods da API, clique no método desejado, em seguida clique em **Try it out** e após **Execute**. Os resultados serão apresentados abaixo, conforme segue a sequência de imagens:
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79453754-7d3fc100-7fc0-11ea-8315-8e66a3724670.png)
+![Alt text](https://user-images.githubusercontent.com/13984252/79453822-96e10880-7fc0-11ea-8a80-8ec81f4cb08c.png)
+![Alt text](https://user-images.githubusercontent.com/13984252/79453825-98123580-7fc0-11ea-95fd-f87ebb02cc41.png)
+
+## Executandos as APIs através do PostMan
+Obs.: Mantenta a aplicação em execução (instruções para compilar e executar a aplicação)
+
+- Abra o Postman, na aba para execução da API, informe os endereços das API disponibilizadas e clique no Send, conforme imagem a seguir:
+
+Endereços:
+
+- http://localhost:5000/api/v1/Breeds/listatodasracas (não necessita de parâmetro)
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79461395-7dde5480-7fcc-11ea-9eb2-aac239cd0179.png)
+
+- http://localhost:5000/api/v1/Breeds/buscaraca?idOrName=abob
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79461400-82a30880-7fcc-11ea-80b0-cc13ce58ccfb.png)
+
+- http://localhost:5000/api/v1/Breeds/buscaracaportemperamento?temperamento=Intelligent
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79461416-88005300-7fcc-11ea-8684-825ed940791b.png)
+
+- http://localhost:5000/api/v1/Breeds/buscaracapororigem?origem=egypt
+
+![Alt text](https://user-images.githubusercontent.com/13984252/79461425-89ca1680-7fcc-11ea-884b-05a951d8ad58.png)
