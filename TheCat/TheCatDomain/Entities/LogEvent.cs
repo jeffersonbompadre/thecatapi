@@ -1,5 +1,5 @@
-﻿using System;
-using TheCatDomain.Enumerables;
+﻿using Microsoft.Extensions.Logging;
+using System;
 
 namespace TheCatDomain.Entities
 {
@@ -24,17 +24,18 @@ namespace TheCatDomain.Entities
         /// <param name="methodName"></param>
         /// <param name="executionTime"></param>
         /// <param name="executionTimeFrmt"></param>
-        public LogEvent(DateTime eventDate, EnumEventType eventType, string methodName, long executionTime, string executionTimeFrmt)
+        public LogEvent(DateTime eventDate, LogLevel eventType, string methodName, long executionTime)
         {
             EventDate = eventDate;
+            EventTypeId = eventType;
             EventType = eventType.ToString();
             MethodName = methodName;
             ExecutionTime = executionTime;
-            ExecutionTimeFrmt = executionTimeFrmt;
         }
 
         public int LogEventId { get; private set; }
         public DateTime EventDate { get; private set; }
+        public LogLevel EventTypeId { get; private set; }
         public string EventType { get; private set; }
         public string MethodName { get; private set; }
         public long ExecutionTime { get; private set; }
@@ -55,7 +56,13 @@ namespace TheCatDomain.Entities
                 EventDate = eventDate;
         }
 
-        public void SetEventType(EnumEventType eventType)
+        public void SetEventTypeId(LogLevel eventType)
+        {
+            if (EventTypeIdIsValid(eventType))
+                EventTypeId = eventType;
+        }
+
+        public void SetEventType(LogLevel eventType)
         {
             if (EventTypeIsValid(eventType.ToString()))
                 EventType = eventType.ToString();
@@ -92,6 +99,7 @@ namespace TheCatDomain.Entities
         public bool IsValid() =>
             IdIsValid(LogEventId) &&
             EventDateIsValid(EventDate) &&
+            EventTypeIdIsValid(EventTypeId) &&
             EventTypeIsValid(EventType) &&
             MethodNameIsValid(MethodName) &&
             ExecutionTimeIsValid(ExecutionTime) &&
@@ -102,10 +110,11 @@ namespace TheCatDomain.Entities
 
         bool IdIsValid(int logEventId) => logEventId >= 0;
         bool EventDateIsValid(DateTime eventDate) => eventDate != null;
+        bool EventTypeIdIsValid(LogLevel eventTypeId) => eventTypeId > 0;
         bool EventTypeIsValid(string eventType) => !string.IsNullOrEmpty(eventType) && eventType.Length <= 60;
         bool MethodNameIsValid(string methodName) => !string.IsNullOrEmpty(methodName) && methodName.Length <= 255;
         bool ExecutionTimeIsValid(long executionTime) => executionTime >= 0;
-        bool ExecutionTimeFrmtIsValid(string executionTimeFrmt) => !string.IsNullOrEmpty(executionTimeFrmt) && executionTimeFrmt.Length <= 12;
+        bool ExecutionTimeFrmtIsValid(string executionTimeFrmt) => string.IsNullOrEmpty(executionTimeFrmt) ? true : executionTimeFrmt.Length <= 12;
         bool DescriptionIsValid(string description) => string.IsNullOrEmpty(description) ? true : description.Length <= 1024;
     }
 }

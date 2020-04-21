@@ -9,5 +9,6 @@
         public string ConnectionString { get; set; }
 
         public TheCatSettings TheCatSettings { get; set; }
+        public ELKSettings ELKSettings { get; set; }
     }
 }

@@ -152,7 +152,8 @@ namespace TheCatRepository.Repositories
 
         async Task FillImageInBreedsObject(Breeds breeds)
         {
-            breeds.Images = await imageUrlRepository.GetImageUrlByBreeds(breeds.BreedsId);
+            var result = await imageUrlRepository.GetImageUrlByBreeds(breeds.BreedsId);
+            breeds.Images = result.Take(3).ToList();
         }
     }
 }

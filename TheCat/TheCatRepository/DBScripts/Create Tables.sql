@@ -144,8 +144,9 @@ GO
 
 CREATE TABLE LogEvent
 (
-    LogEventId int NOT NULL IDENTITY(1,1),
+    LogEventId INT NOT NULL IDENTITY(1,1),
     EventDate DATETIME NOT NULL,
+    EventTypeId INT NOT NULL,
     EventType VARCHAR(60) NOT NULL,
     MethodName VARCHAR(255) NOT NULL,
     ExecutionTime BIGINT NOT NULL,

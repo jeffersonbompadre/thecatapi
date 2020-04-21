@@ -1,5 +1,10 @@
-﻿using System.Linq;
+﻿using Microsoft.Extensions.Logging;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using TheCatAPIIntegration.Service;
+using TheCatDomain.Entities;
 using TheCatDomain.Interfaces;
 using TheCatDomain.Interfaces.Integration;
 using TheCatDomain.Models;
@@ -16,6 +21,8 @@ namespace TheCatTest.Integration
 
         readonly IAppConfiguration appConfiguration;
         readonly ITheCatAPI theCatAPI;
+        readonly IELKIntegration elkIntegration;
+
 
         /// <summary>
         /// Construtor utilizado para instanciar as classes que serão testadas
@@ -24,7 +31,10 @@ namespace TheCatTest.Integration
         {
             appConfiguration = new AppConfiguration();
             theCatAPI = new TheCatAPIService(appConfiguration);
+            elkIntegration = new ELKIntegrationService(appConfiguration);
         }
+
+        #region Testes de Integração com TheCatAPI
 
         /// <summary>
         /// Realiza teste da chamada ao método Breeds da API TheCatAPI retornando todas inforações encontradas
@@ -69,5 +79,24 @@ namespace TheCatTest.Integration
             var result = await theCatAPI.GetImagesByBreeds(resultBreeds.FirstOrDefault().Id);
             Assert.NotNull(result);
         }
+
+        #endregion
+
+        #region Testes de Integração com ELK
+
+        [Fact]
+        public async Task ELKAddDocTest()
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            await Task.Delay(300);
+            stopWatch.Stop();
+            var logEvent = new LogEvent(DateTime.UtcNow, LogLevel.Debug, "ELKAddDocTest", stopWatch.ElapsedMilliseconds);
+            logEvent.SetLogEventId(1);
+            logEvent.SetDescription("Teste de Integração com ELK");
+            await elkIntegration.AddDoc(logEvent);
+        }
+
+        #endregion
     }
 }

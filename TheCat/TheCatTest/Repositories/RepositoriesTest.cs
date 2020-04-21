@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TheCatDomain.Entities;
-using TheCatDomain.Enumerables;
 using TheCatDomain.Interfaces;
 using TheCatDomain.Interfaces.Repositories;
 using TheCatDomain.Models;
@@ -275,7 +275,7 @@ namespace TheCatTest.Repositories
         {
             var startDate = DateTime.Now.AddDays(-15);
             var finishDate = DateTime.Now;
-            var eventType = EnumEventType.AllEvents;
+            var eventType = LogLevel.None;
 
             await AddLogEvent();
             var result = await logEventRepository.GetLogEvents(startDate, finishDate, eventType);
@@ -291,21 +291,21 @@ namespace TheCatTest.Repositories
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            await Task.Delay(1000);
+            await Task.Delay(300);
             stopWatch.Stop();
             // Get the elapsed time as a TimeSpan value.
             var ts = stopWatch.Elapsed;
             // Format and display the TimeSpan value.
-            var elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:000}",
+            var elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:000}",
                 ts.Hours, ts.Minutes, ts.Seconds,
                 ts.Milliseconds);
             var eventLog = new LogEvent(
                 DateTime.Now,
-                EnumEventType.Test,
+                LogLevel.Debug,
                 "AddLogEventTest",
-                ts.Ticks,
-                elapsedTime
+                stopWatch.ElapsedMilliseconds
             );
+            eventLog.SetExecutionTimeFrmt(elapsedTime);
             eventLog.SetDescription($"Log armazenado a partir da execução dos testes");
             await logEventRepository.AddLogEvent(eventLog);
         }

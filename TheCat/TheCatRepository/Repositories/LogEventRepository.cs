@@ -1,10 +1,10 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TheCatDomain.Entities;
-using TheCatDomain.Enumerables;
 using TheCatDomain.Interfaces.Repositories;
 using TheCatRepository.Context;
 
@@ -38,7 +38,7 @@ namespace TheCatRepository.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<ICollection<LogEvent>> GetLogEvents(DateTime startDate, DateTime finishDate, EnumEventType eventType = EnumEventType.AllEvents)
+        public async Task<ICollection<LogEvent>> GetLogEvents(DateTime startDate, DateTime finishDate, LogLevel eventType = LogLevel.None)
         {
             // Garante que se passar um período dentro da mesma data, pega inicial como 0 e final 23:59
             startDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0);
@@ -46,7 +46,7 @@ namespace TheCatRepository.Repositories
             using (var conn = theCatContext.GetConnection)
             {
                 var qryJoin = string.Concat(queryBase, " WHERE EventDate BETWEEN @startDate and @finishDate");
-                if (eventType != EnumEventType.AllEvents)
+                if (eventType != LogLevel.None)
                     qryJoin = string.Concat(qryJoin, $" AND EventType = '{eventType}'");
                 var result = await conn.QueryAsync<LogEvent>(
                     qryJoin,
@@ -73,9 +73,9 @@ namespace TheCatRepository.Repositories
             {
                 var sqlCommand =
                     @"INSERT INTO LogEvent 
-                        (EventDate, EventType, MethodName, ExecutionTime, ExecutionTimeFrmt, Description) 
+                        (EventDate, EventTypeId, EventType, MethodName, ExecutionTime, ExecutionTimeFrmt, Description) 
                       VALUES
-                        (@EventDate, @EventType, @MethodName, @ExecutionTime, @ExecutionTimeFrmt, @Description)";
+                        (@EventDate, @EventTypeId, @EventType, @MethodName, @ExecutionTime, @ExecutionTimeFrmt, @Description)";
                 using (var conn = theCatContext.GetConnection)
                 {
                     await conn.ExecuteAsync(sqlCommand, logEvent);
